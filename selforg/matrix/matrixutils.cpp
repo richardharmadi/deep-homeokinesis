@@ -72,6 +72,8 @@ namespace matrix {
     gsl_vector_view eval_imag = gsl_vector_complex_imag(eval);
     real = fromGSL(&eval_real.vector);
     imag = fromGSL(&eval_imag.vector);
+    gsl_matrix_free (m_gsl);
+    gsl_vector_complex_free (eval);
     return true;
   }
 
