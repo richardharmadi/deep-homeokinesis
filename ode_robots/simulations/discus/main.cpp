@@ -168,7 +168,7 @@ public:
 
     sensor=0;
 
-    bool squarecorridor=false;
+    bool squarecorridor=true;
     bool normalplayground=true;
     bool tiltedplanes=true;
 

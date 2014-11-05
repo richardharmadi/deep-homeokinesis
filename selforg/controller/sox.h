@@ -125,6 +125,7 @@ protected:
   unsigned short number_sensors;
   unsigned short number_motors;
   static const unsigned short buffersize = 10;
+  double xi_norm; // Prediction error sqrt norm
 
   matrix::Matrix A; // Model Matrix
   matrix::Matrix C; // Controller Matrix

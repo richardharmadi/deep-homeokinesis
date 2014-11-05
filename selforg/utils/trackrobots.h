@@ -125,6 +125,11 @@ public:
     return conf.trackPos || conf.trackOrientation || conf.trackSpeed;
   };
 
+  /// return wheter track to file
+  bool isWriteFile() const {
+    return conf.writeFile;
+  };
+
   TrackRobotConf conf;
 
  protected:

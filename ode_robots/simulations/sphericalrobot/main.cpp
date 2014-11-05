@@ -216,7 +216,7 @@ public:
     useReinforcement=0;
     sensor=0;
 
-    bool labyrint=false;
+    bool labyrint=true;
     bool squarecorridor=false;
     bool normalplayground=false;
 

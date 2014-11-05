@@ -84,6 +84,7 @@ void Sox::constructor(){
   addInspectableMatrix("R", &R, conf.someInternalParams, "linear response matrix");
 
   addInspectableMatrix("v_avg", &v_avg, "input shift (averaged)");
+  addInspectableValue("xi_norm", &xi_norm, "prediction error norm");
 
   intern_isTeaching = false;
 
@@ -265,6 +266,7 @@ void Sox::learn(){
   const Matrix& x_fut   = x_buffer[t% buffersize]; // future sensor (with respect to x,y)
 
   const Matrix& xi      = x_fut  - (A * y_creat + b + S * x); // here we use creativity
+  xi_norm               = sqrt(xi.norm_sqr()); // for visualisation
 
   const Matrix& z       = (C * (x) + h); // here no creativity
   const Matrix& y       = z.map(g);

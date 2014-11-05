@@ -102,10 +102,10 @@ public:
   {
     addParameterDef("multilayer",&useMultilayer, false, "use multilayer controller (SoML)");
 
-    int numHexapods      = 0;
+    int numHexapods      = 1;
     int numSphericals    = 0;
     int numSnakes        = 0;
-    int numHumanoids     = 1;
+    int numHumanoids     = 0;
     int numSliderWheelie = 0;
     int numLongVehicle   = 0;
     int numCaterPillars   = 0;

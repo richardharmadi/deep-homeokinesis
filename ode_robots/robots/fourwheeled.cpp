@@ -140,6 +140,19 @@ namespace lpzrobots {
     }
 
 
+    if(conf.useBigBox){
+      Primitive* pole;
+      double cylinder_radius = conf.size * .7;
+      double cylinder_height = conf.size * .05;
+      // Simon: I think objects[0] is rotated this why dimensions are changed
+      pole = new Cylinder(cylinder_radius, cylinder_height); //, conf.size*1.5);
+      bigboxtransform = new Transform(objects[0], pole,
+                        osg::Matrix::rotate(M_PI, 1, 0, 1)  * pole->getPose() *
+                        osg::Matrix::translate(-.1 * conf.size, 0, 0));
+      bigboxtransform->init(odeHandle, 0, osgHandle,Primitive::Geom /*|  Primitive::Draw*/ );
+    }else{
+      bigboxtransform = 0;
+    }
 
     /* initialize sensorbank (for use of infrared sensors)
      * sensor values (if sensors used) are saved in the vector of

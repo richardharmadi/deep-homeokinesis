@@ -121,6 +121,10 @@ namespace lpzrobots {
     return joint->getPosition1Rate();
   }
 
+  double AngularMotor1Axis::getAngle() { // TODO Extend this motor so not messing with old stuff
+    return joint->getPosition1();
+  }
+
   /**  sets the maximal force the motor has
    */
   void AngularMotor1Axis::setPower(double power){

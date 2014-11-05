@@ -108,6 +108,10 @@ namespace lpzrobots {
      */
     virtual double get(int axisNumber) ;
 
+    /** returns the angle of rotatino of the joint
+     */
+    virtual double getAngle(); 
+
     virtual void setPower(double power);
 
     virtual Joint* getJoint() { return joint; }

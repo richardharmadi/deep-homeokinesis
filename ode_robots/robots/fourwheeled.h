@@ -40,6 +40,7 @@ namespace lpzrobots {
     bool sphereWheels;
     bool useBumper;
     bool useButton; ///< use yellow Button at the back
+    bool useBigBox;
     bool twoWheelMode; ///< if true then the robot emulates 2 wheels
     bool irFront;
     bool irBack;
@@ -74,6 +75,7 @@ namespace lpzrobots {
       conf.twoWheelMode = false;
       conf.useBumper    = true;
       conf.useButton    = false;
+      conf.useBigBox    = false;
       conf.irFront      = false;
       conf.irBack       = false;
       conf.irSide       = false;
@@ -121,6 +123,7 @@ namespace lpzrobots {
     RaySensorBank irSensorBank; // a collection of ir sensors
     Primitive* bumpertrans;
     Primitive* bumper;
+    Primitive* bigboxtransform;
   };
 
 }

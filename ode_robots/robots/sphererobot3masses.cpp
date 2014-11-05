@@ -176,6 +176,7 @@ namespace lpzrobots {
     dBodyID b = getMainPrimitive()->getBody();
     double friction = odeHandle.substance.roughness;
     const double* vel = dBodyGetAngularVel( b);
+    cout << vel[0] << " " << vel[1] << " " << vel[2] << endl;
     if(fabs(vel[2])>0.2){
       dBodyAddTorque ( b , 0 , 0 , -0.05*friction*vel[2] );
     }

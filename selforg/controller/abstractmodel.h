@@ -55,6 +55,8 @@ class AbstractModel : public Configurable, public Storeable, public Inspectable 
      for example might change internal states
   */
   virtual const matrix::Matrix process (const matrix::Matrix& input) = 0;
+  /*virtual const matrix::Matrix process (const matrix::Matrix& input, */
+  /*const matrix::Matrix& teachingForce) = 0;*/
 
   /* performs learning and returns the network output before learning.
      Neural networks process the input before. (no need to call process before)
