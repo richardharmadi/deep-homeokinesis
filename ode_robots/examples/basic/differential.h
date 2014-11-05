@@ -67,7 +67,7 @@ namespace lpzrobots{
       DifferentialConf conf;
 
       /**
-       * Contrustructor
+       * Constructor
        */
       Differential(const OdeHandle& odeHandle, const OsgHandle& osgHandle,
                    const DifferentialConf &conf = getDefaultConf(),

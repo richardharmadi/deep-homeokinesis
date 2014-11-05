@@ -79,7 +79,7 @@ class ThisSim : public Simulation
 
       /** Environment and obstacles */
       // New playground
-      Playground* playground = new Playground(odeHandle, osgHandle,osg::Vec3(15., .2, 1.2), 1);
+      Playground* playground = new Playground(odeHandle, osgHandle, osg::Vec3(15., .2, 1.2), 1.);
       // Set colours
       playground->setGroundColor(Color(.784, .784, .0));
       playground->setColor(Color(1., .784, .082, .3));
