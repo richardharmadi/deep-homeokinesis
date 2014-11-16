@@ -1,0 +1,312 @@
+\begin{thebibliography}{}
+
+\bibitem[Atiya and Parlos, 2000]{Atiya}
+Atiya, A.~F. and Parlos, A.~G. (2000).
+\newblock New results on recurrent network training: unifying the algorithms
+  and accelerating convergence.
+\newblock {\em Trans. Neur. Netw.}, 11(3):697--709.
+
+\bibitem[Atkeson et~al., 1997]{atkeson}
+Atkeson, C.~G., Moore, A.~W., and Schaal, S. (1997).
+\newblock Locally weighted learning for control.
+\newblock {\em Artificial intelligence review}, 11(1-5):75--113.
+
+\bibitem[Ay et~al., 2008]{ay08}
+Ay, N., Bertschinger, N., Der, R., GÃ¼ttler, F., and Olbrich, E. (2008).
+\newblock Predictive information and explorative behavior of autonomous robots.
+\newblock {\em The European Physical Journal B}, 63(3):329--339.
+
+\bibitem[Bonabeau et~al., 1999]{Bonabeau:1999}
+Bonabeau, E., Dorigo, M., and Theraulaz, G. (1999).
+\newblock {\em Swarm intelligence: from natural to artificial systems}.
+\newblock Oxford University Press, Inc., New York, NY, USA.
+
+\bibitem[Bongard et~al., 2006]{Bongard2006}
+Bongard, J., Zykov, V., and Lipson, H. (2006).
+\newblock {Resilient machines through continuous self-modeling.}
+\newblock {\em Science}, 314(5802):1118--21.
+
+\bibitem[Brooks, 1991]{Brooks91}
+Brooks, R. (1991).
+\newblock Intelligence without representation.
+\newblock {\em Artificial Intelligence}, 47:139--159.
+
+\bibitem[Chang et~al., 2002]{HYP}
+Chang, F.-J., Chang, L.-C., and Huang, H.-L. (2002).
+\newblock Real-time recurrent learning neural network for stream-flow
+  forecasting.
+\newblock {\em Hydrological Processes}, 16(13):2577--2588.
+
+\bibitem[Cleveland and Devlin, 1988]{cleveland}
+Cleveland, W.~S. and Devlin, S.~J. (1988).
+\newblock Locally weighted regression: an approach to regression analysis by
+  local fitting.
+\newblock {\em Journal of the American Statistical Association},
+  83(403):596--610.
+
+\bibitem[Der, 2001]{der01}
+Der, R. (2001).
+\newblock Self-organized acquisition of situated behaviors.
+\newblock {\em Theory Biosci.}, 120:179--187.
+
+\bibitem[Der et~al., 2004]{derhesselieb04}
+Der, R., Hesse, F., and Liebscher, R. (2004).
+\newblock Self-organized exploration and automatic sensor integration from the
+  homeokinetic principle.
+\newblock In {\em Proc.\ 3rd Workshop on Self-Organization of AdaptiVE Behavior
+  (SOAVE'04)}, Fortschritt-Berichte VDI, Reihe 10, Nr. 743, pages 220--230.
+  VDI-Verlag.
+
+\bibitem[Der and Liebscher, 2002]{derlieb02}
+Der, R. and Liebscher, R. (2002).
+\newblock True autonomy from self-organized adaptivity.
+\newblock In {\em Proc. Workshop Biologically Inspired Robotics}, Bristol.
+
+\bibitem[Der and Martius, 2012]{DerMartius11}
+Der, R. and Martius, G. (2012).
+\newblock {\em {T}he {P}layful {M}achine - {T}heoretical Foundation and
+  Practical Realization of Self-Organizing Robots}.
+\newblock Springer.
+
+\bibitem[Der et~al., 1999]{dersteinpas99}
+Der, R., Steinmetz, U., and Pasemann, F. (1999).
+\newblock Homeokinesis - a new principle to back up evolution with learning.
+\newblock In {\em Proc.\ Intl.\ Conf.\ on Computational Intelligence for
+  Modelling, Control and Automation (CIMCA 99)}, volume~55 of {\em Concurrent
+  Systems Engineering Series}, pages 43--47, Amsterdam. IOS Press.
+
+\bibitem[Ferezou et~al., 2007]{Ferezou}
+Ferezou, I., Haiss, F., Gentet, L.~J., Aronoff, R., Weber, B., and Petersen,
+  C.~C. (2007).
+\newblock Spatiotemporal dynamics of cortical sensorimotor integration in
+  behaving mice.
+\newblock {\em Neuron}, 56(5):907 -- 923.
+
+\bibitem[Flanagan and Wing, 1997]{Flanagan97therole}
+Flanagan, A. and Wing, A.~M. (1997).
+\newblock The role of internal models in motion planning and control: Evidence
+  from grip force adjustments during movements of hand-held loads.
+\newblock {\em J. Neurosci}, 17:1519--1528.
+
+\bibitem[Guckenheimer, 2007]{Guckenheimer:2007}
+Guckenheimer, J. (2007).
+\newblock Bifurcation.
+\newblock {\em Scholarpedia}, 2(6):1517.
+
+\bibitem[Haken, 2008]{Haken:2008}
+Haken, H. (2008).
+\newblock Self-organization.
+\newblock {\em Scholarpedia}, 3(8):1401.
+
+\bibitem[Hesse, 2009]{hesse09:diss}
+Hesse, F. (2009).
+\newblock {\em Self-Organizing Control for Autonomous Robots}.
+\newblock PhD thesis, University of G\"ottingen, Institute for Nonlinear
+  Dynamics.
+
+\bibitem[Hochreiter and Schmidhuber, 1997]{Hochreiter}
+Hochreiter, S. and Schmidhuber, J. (1997).
+\newblock Long short-term memory.
+\newblock {\em Neural Comput.}, 9(8):1735--1780.
+
+\bibitem[Jaeger, 2001]{jaeger2}
+Jaeger, H. (2001).
+\newblock The" echo state" approach to analysing and training recurrent neural
+  networks-with an erratum note'.
+\newblock {\em Bonn, Germany: German National Research Center for Information
+  Technology GMD Technical Report}, 148.
+
+\bibitem[Jaeger, 2002a]{jaeger}
+Jaeger, H. (2002a).
+\newblock Adaptive nonlinear system identification with echo state networks.
+\newblock In {\em Advances in neural information processing systems}, pages
+  593--600.
+
+\bibitem[Jaeger, 2002b]{jaeger2002}
+Jaeger, H. (2002b).
+\newblock {\em Tutorial on training recurrent neural networks, covering BPPT,
+  RTRL, EKF and the" echo state network" approach}.
+\newblock GMD-Forschungszentrum Informationstechnik.
+
+\bibitem[Jordan and Rumelhart, 1992]{COGS:COGS236}
+Jordan, M.~I. and Rumelhart, D.~E. (1992).
+\newblock Forward models: Supervised learning with a distal teacher.
+\newblock {\em Cognitive Science}, 16(3):307--354.
+
+\bibitem[Kawato, 1999]{Kawato1999718}
+Kawato, M. (1999).
+\newblock Internal models for motor control and trajectory planning.
+\newblock {\em Current Opinion in Neurobiology}, 9(6):718 -- 727.
+
+\bibitem[Lin et~al., 2009]{Lin}
+Lin, X., Yang, Z., and Song, Y. (2009).
+\newblock Short-term stock price prediction based on echo state networks.
+\newblock {\em Expert Systems with Applications}, 36(3, Part 2):7313 -- 7317.
+
+\bibitem[Manoonpong and W\"{o}rg\"{o}tter, 2009]{Manoonpong}
+Manoonpong, P. and W\"{o}rg\"{o}tter, F. (2009).
+\newblock Efference copies in neural control of dynamic biped walking.
+\newblock {\em Robot. Auton. Syst.}, 57(11):1140--1153.
+
+\bibitem[Martius, 2010]{martius:diss10}
+Martius, G. (2010).
+\newblock {\em Goal-Oriented Control of Self-Organizing Behavior in Autonomous
+  Robots}.
+\newblock PhD thesis, Georg-August-Universit\"at G\"ottingen.
+
+\bibitem[Martius and Herrmann, 2012]{martiusherrmann}
+Martius, G. and Herrmann, J.~M. (2012).
+\newblock Variants of guided self-organization for robot control.
+\newblock {\em Theory in Biosci.}, 131(3):129--137.
+
+\bibitem[Martius et~al., 2007]{martius:guid}
+Martius, G., Herrmann, J.~M., and Der, R. (2007).
+\newblock Guided self-organisation for autonomous robot development.
+\newblock In Almeida~e Costa, F., Rocha, L., Costa, E., Harvey, I., and
+  Coutinho, A., editors, {\em Advances in Artificial Life 9th European
+  Conference, ECAL 2007}, volume 4648 of {\em LNCS}, pages 766--775. Springer.
+
+\bibitem[Martius et~al., 2010]{lpzrobots}
+Martius, G., Hesse, F., G\"uttler, F., and Der, R. (2010).
+\newblock \textsc{LpzRobots}: A free and powerful robot simulator.
+\newblock \url{http://robot.informatik.uni-leipzig.de/software}.
+
+\bibitem[Murata and Kurokawa, 2012]{murata2012self}
+Murata, S. and Kurokawa, H. (2012).
+\newblock {\em Self-organizing robots}.
+\newblock Springer.
+
+\bibitem[Neumann, 1966]{Neumann}
+Neumann, J.~V. (1966).
+\newblock {\em Theory of Self-Reproducing Automata}.
+\newblock University of Illinois Press, Champaign, IL, USA.
+
+\bibitem[Nguyen and Kleinfeld, 2005]{Nguyen}
+Nguyen, Q.-T. and Kleinfeld, D. (2005).
+\newblock Positive feedback in a brainstem tactile sensorimotor loop.
+\newblock {\em Neuron}, 45(3):447 -- 457.
+
+\bibitem[Nguyen-Tuong and Peters, 2011]{Nguyen-Tuong2011}
+Nguyen-Tuong, D. and Peters, J. (2011).
+\newblock {Model learning for robot control: a survey.}
+\newblock {\em Cognitive processing}, 12(4):319--40.
+
+\bibitem[Nolfi and Floreano, 2000]{nolfi2000evolutionary}
+Nolfi, S. and Floreano, D. (2000).
+\newblock {\em Evolutionary Robotics: The Biology, Intelligence, and Technology
+  of Self-Organizing Machines}.
+\newblock A Bradford book. A BRADFORD BOOK/THE MIT PRESS.
+
+\bibitem[Nolfi and Floreano, 2002]{Nolfi200231}
+Nolfi, S. and Floreano, D. (2002).
+\newblock Synthesis of autonomous robots through evolution.
+\newblock {\em Trends in Cognitive Sciences}, 6(1):31 -- 37.
+
+\bibitem[Nouyan et~al., 2008]{Nuyan}
+Nouyan, S., Campo, A., and Dorigo, M. (2008).
+\newblock Path formation in a robot swarm.
+\newblock {\em Swarm Intelligence}, 2(1):1--23.
+
+\bibitem[Pasemann, 1993]{Pasemann1993}
+Pasemann, F. (1993).
+\newblock {Dynamics of a Single Model Neuron}.
+\newblock {\em International Journal of Bifurcation and Chaos},
+  03(02):271--278.
+
+\bibitem[Renals and Rohwer, 1990]{Renals}
+Renals, S. and Rohwer, R. (1990).
+\newblock A study of network dynamics.
+\newblock {\em Journal of Statistical Physics}, 58(5-6):825--848.
+
+\bibitem[Reynolds, 1987]{Reynolds}
+Reynolds, C.~W. (1987).
+\newblock Flocks, herds and schools: A distributed behavioral model.
+\newblock {\em SIGGRAPH Comput. Graph.}, 21(4):25--34.
+
+\bibitem[Schr\"{o}der-Schetelig et~al., 2010]{Schroder}
+Schr\"{o}der-Schetelig, J., Manoonpong, P., and W\"{o}rg\"{o}tter, F. (2010).
+\newblock Using efference copy and a forward internal model for adaptive biped
+  walking.
+\newblock {\em Auton. Robots}, 29(3-4):357--366.
+
+\bibitem[Skowronski and Harris, 2007]{Skowronski}
+Skowronski, M.~D. and Harris, J.~G. (2007).
+\newblock Automatic speech recognition using a predictive echo state network
+  classifier.
+\newblock {\em Neural Networks}, 20(3):414 -- 423.
+\newblock Echo State Networks and Liquid State Machines.
+
+\bibitem[Smith and Zipser, 1989]{smith}
+Smith, A.~W. and Zipser, D. (1989).
+\newblock Learning sequential structure with the real-time recurrent learning
+  algorithm.
+\newblock {\em International Journal of Neural Systems}, 01(02):125--131.
+
+\bibitem[Steil, 2004]{Steil}
+Steil, J. (2004).
+\newblock Backpropagation-decorrelation: online recurrent learning with o(n)
+  complexity.
+\newblock In {\em Neural Networks, 2004. Proceedings. 2004 IEEE International
+  Joint Conference on}, volume~2, pages 843--848 vol.2.
+
+\bibitem[Steil, 2005]{Steil2}
+Steil, J. (2005).
+\newblock Memory in backpropagation-decorrelation o(n) efficient online
+  recurrent learning.
+\newblock In Duch, W., Kacprzyk, J., Oja, E., and Zadrożny, S., editors, {\em
+  Artificial Neural Networks: Formal Models and Their Applications – ICANN
+  2005}, volume 3697 of {\em Lecture Notes in Computer Science}, pages
+  649--654. Springer Berlin Heidelberg.
+
+\bibitem[Svennebring and Koenig, 2004]{Svennebring}
+Svennebring, J. and Koenig, S. (2004).
+\newblock Building terrain-covering ant robots: A feasibility study.
+\newblock {\em Auton. Robots}, 16(3):313--332.
+
+\bibitem[Thoroughman and Shadmehr, 2000]{Thoroughman2000}
+Thoroughman, K.~a. and Shadmehr, R. (2000).
+\newblock {Learning of action through adaptive combination of motor
+  primitives.}
+\newblock {\em Nature}, 407(6805):742--7.
+
+\bibitem[Tong et~al., 2007]{Tong}
+Tong, M.~H., Bickett, A.~D., Christiansen, E.~M., and Cottrell, G.~W. (2007).
+\newblock Learning grammatical structure with echo state networks.
+\newblock {\em Neural Networks}, 20(3):424 -- 432.
+\newblock Echo State Networks and Liquid State Machines.
+
+\bibitem[Trianni and Dorigo, 2006]{Trianni}
+Trianni, V. and Dorigo, M. (2006).
+\newblock Self-organisation and communication in groups of simulated and
+  physical robots.
+\newblock {\em Biol. Cybern.}, 95(3):213--231.
+
+\bibitem[Werbos, 1990]{Werbos}
+Werbos, P. (1990).
+\newblock Backpropagation through time: what it does and how to do it.
+\newblock {\em Proceedings of the IEEE}, 78(10):1550--1560.
+
+\bibitem[Wiener, 1965]{wiener}
+Wiener, N. (1965).
+\newblock {\em Cybernetics: Or, Control and Communication in the Animal and the
+  Machine}.
+\newblock The @MIT paperback series: Massachusetts Institute of Technology. Mit
+  Press.
+
+\bibitem[Williams and Zipser, 1989]{Williams}
+Williams, R.~J. and Zipser, D. (1989).
+\newblock A learning algorithm for continually running fully recurrent neural
+  networks.
+\newblock {\em Neural Comput.}, 1(2):270--280.
+
+\bibitem[Wolpert and Ghahramani, 2000]{Wolpert2}
+Wolpert, D. and Ghahramani, Z. (2000).
+\newblock {Computational principles of movement neuroscience}.
+\newblock {\em Nature Neuroscience}, 3 Suppl:1212--1217.
+
+\bibitem[Wolpert et~al., 1995]{Wolpert29091995}
+Wolpert, D., Ghahramani, Z., and Jordan, M. (1995).
+\newblock An internal model for sensorimotor integration.
+\newblock {\em Science}, 269(5232):1880--1882.
+
+\end{thebibliography}

@@ -1,0 +1,23 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: MScThesis.aux
+A level-1 auxiliary file: Introduction.aux
+Already encountered file Introduction.aux
+---line 61 of file MScThesis.aux
+ : \@input{Introduction.aux
+ :                         }
+I'm skipping whatever remains of this command
+A level-1 auxiliary file: .aux
+Already encountered file .aux
+---line 173 of file MScThesis.aux
+ : \@input{.aux
+ :             }
+I'm skipping whatever remains of this command
+A level-1 auxiliary file: Evaluation.aux
+Already encountered file .aux
+---line 183 of file MScThesis.aux
+ : \@input{.aux
+ :             }
+I'm skipping whatever remains of this command
+The style file: apalike.bst
+Database file #1: thesis.bib
+Warning--can't use both author and editor fields in Neumann
+(There were 3 error messages)
