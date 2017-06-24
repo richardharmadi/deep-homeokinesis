@@ -44,7 +44,7 @@ INC +=  -I. -Iinclude -Iinclude/selforg
 CPPFLAGS = -Wall -pipe -fpic $(INC) $(shell ./selforg-config --srcprefix="." $(CFGOPTS) --intern --cflags)
 
 # used for single file compilation
-CXX = g++
+CXX = clang++
 
 # used for lib-packing
 AR = ar -rcs
@@ -77,7 +77,7 @@ ${BUILD_DIR}/%.o: %.cpp
 	$(CXX) -c $(CPPFLAGS) $(CFLAGS) -o "$@" "$<"
 
 $(SHAREDLIB): Makefile.depend $(OFILES)
-	$(CXX) -shared -Wl,-soname,`basename $(SHAREDLIB)` -o $(SHAREDLIB) $(OFILES)
+	$(CXX) -shared -Wl,-undefined,dynamic_lookup,-install_name,`basename $(SHAREDLIB)` -o $(SHAREDLIB) $(OFILES)
 
 
 install_scripts:
