@@ -3,8 +3,8 @@
 #include<vector>
 using namespace std;
 
-#include <selforg/sinecontroller.h>
-#include <selforg/stackcontroller.h>
+#include <selforg/controller/sinecontroller.h>
+#include "stackcontroller.h"
 
 const int MNumber = 2;
 const int SNumber = 2;
