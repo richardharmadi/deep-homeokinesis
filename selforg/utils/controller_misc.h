@@ -24,7 +24,7 @@
 #ifndef __CONTOLLER_MISC_H
 #define __CONTOLLER_MISC_H
 
-#include <selforg/matrix.h>
+#include <selforg/matrix/matrix.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <cmath>

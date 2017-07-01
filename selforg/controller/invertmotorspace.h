@@ -23,8 +23,8 @@
 #include <assert.h>
 #include <cmath>
 
-#include <selforg/matrix.h>
-#include <selforg/noisegenerator.h>
+#include <selforg/matrix/matrix.h>
+#include <selforg/utils/noisegenerator.h>
 
 /**
  * class for robot controller that uses the georg's matrixlib for

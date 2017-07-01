@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include "storeable.h"
+#include <selforg/utils/storeable.h>
 
 // TODO: add doxygen section
 

@@ -21,7 +21,7 @@
 #define __HOMEOKINBASE_H
 
 #include "abstractcontroller.h"
-#include "controller_misc.h"
+#include <selforg/utils/controller_misc.h>
 #include <stdlib.h>
 #include <string.h>
 
