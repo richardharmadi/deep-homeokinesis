@@ -24,7 +24,7 @@
 #ifndef __TEACHABLE_H
 #define __TEACHABLE_H
 
-#include <selforg/utils/matrix.h>
+#include <selforg/matrix/matrix.h>
 
 /**
    Interface for teachable controller. 
