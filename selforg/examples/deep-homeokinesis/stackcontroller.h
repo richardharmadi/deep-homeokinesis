@@ -3,7 +3,7 @@
 
 #include <selforg/controller/invertmotorcontroller.h>
 #include <selforg/controller/teachable.h>
-#include <selforg/utils/matrix.h>
+#include <selforg/matrix/matrix.h>
 #include <vector>
 
 typedef struct StackControllerConf{
