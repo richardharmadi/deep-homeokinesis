@@ -22,7 +22,7 @@
 #define __INVERTMOTORCONTROLLER_H
 
 #include "homeokinbase.h"
-#include "controller_misc.h"
+#include <selforg/utils/controller_misc.h>
 #include <stdlib.h>
 #include <string.h>
 

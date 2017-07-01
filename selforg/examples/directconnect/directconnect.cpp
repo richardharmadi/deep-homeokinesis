@@ -3,8 +3,8 @@
 #include<vector>
 using namespace std;
 
-#include <selforg/sinecontroller.h>
-#include <selforg/invertmotorspace.h>
+#include <selforg/controller/sinecontroller.h>
+#include <selforg/controller/invertmotorspace.h>
 
 const int MNumber = 2;
 const int SNumber = 2;

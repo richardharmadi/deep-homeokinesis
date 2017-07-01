@@ -27,11 +27,11 @@
 #include <stdio.h>
 #include <list>
 #include <map>
-#include "configurable.h"
-#include "inspectable.h"
-#include "storeable.h"
-#include "randomgenerator.h"
-#include "sensormotorinfo.h"
+#include <selforg/utils/configurable.h>
+#include <selforg/utils/inspectable.h>
+#include <selforg/utils/storeable.h>
+#include <selforg/utils/randomgenerator.h>
+#include <selforg/utils/sensormotorinfo.h>
 
 /**
  * Abstract class for robot controller (with some basic functionality).
