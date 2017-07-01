@@ -25,7 +25,7 @@
 #define __REGULARISATION_H
 
 #include <cmath>
-#include <selforg/controller_misc.h>
+#include <selforg/utils/controller_misc.h>
 
 double inline sqr(double x) { 
   return x*x; 

@@ -1,11 +1,13 @@
 #ifndef __STACKCONTROLLER_H
 #define __STACKCONTROLLER_H
 
+#include <iostream>
 #include <selforg/controller/invertmotorcontroller.h>
 #include <selforg/controller/teachable.h>
 #include <selforg/matrix/matrix.h>
 #include <vector>
 
+using namespace std;
 typedef struct StackControllerConf{
   int buffersize; // size of the time-buffer for x,y,eta
   int nlayers; // size of the deep networks
@@ -25,20 +27,6 @@ public:
 
   virtual void init(int sensornumber, int motornumber, int layernumber, RandGen* randGen = 0);
 
-	std::vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
-	std::vector<matrix::Matrix> S; // vector of additional Model Matrix (sensors to sensors)
-	std::vector<matrix::Matrix> SD; // vector of additional Model Matrix (sensors derivatives to sensors)
-	std::vector<matrix::Matrix> C; // vector of Controller Matrix
-	std::vector<matrix::Matrix> H; // vector of Controller Bias
-	std::vector<matrix::Matrix> B; // vector of Model Bias
-
-// memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
-	A.reserve(5);
-	S.reserve(5);
-	SD.reserve(5);
-	C.reserve(5);
-	H.reserve(5);
-	B.reserve(5);
 /*
   // Destructor
   virtual ~StackController();

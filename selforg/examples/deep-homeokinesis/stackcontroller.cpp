@@ -1,5 +1,7 @@
 #include "stackcontroller.h"
 #include <selforg/controller/regularisation.h>
+#include <iostream>
+#include <vector>
 
 using namespace matrix;
 using namespace std;
@@ -7,6 +9,10 @@ using namespace std;
 StackController::StackController(const StackControllerConf& conf)
     : InvertMotorController(conf.buffersize, "StackController", "$Id$"), conf(conf)
 {
+  vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
+  // memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
+  A.reserve(5);
+  
   for (i=0;i<conf.nlayers;i++){
     A.push_back(Matrix()); // add new zero matrix as an element in the vector
     addInspectableMatrix("A"+str(i),&A[i],conf.someInternalParams, "model matrix"+str(i));
@@ -17,7 +23,7 @@ StackController::StackController(const StackControllerConf& conf)
   if(conf.useSD)
     addInspectableMatrix("SD", &SD, conf.someInternalParams, "extended Model matrix (deriv)");
 
-  addInspectableMatrix("C", &C, conf.someInternalParams, "controller matrix");
+  addInspectablveMatrix("C", &C, conf.someInternalParams, "controller matrix");
   addInspectableMatrix("R", &R, conf.someInternalParams, "linear Response matrix");
   addInspectableMatrix("H", &H, false, "controller bias");
   addInspectableMatrix("B", &B, false, "model bias");
