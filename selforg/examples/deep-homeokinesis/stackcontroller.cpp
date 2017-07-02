@@ -44,17 +44,18 @@ StackController::StackController( const StackControllerConf& conf)
   reinforcement=0;
   E_val=0;
   reinforcefactor=0;
+  */
   BNoiseGen = 0;
   YNoiseGen = 0;
-
+  
   x_buffer = 0;
   y_buffer = 0;
   eta_buffer = 0;
-  */
+  
 };
 
-/*
-InvertMotorNStep::~InvertMotorNStep()
+
+StackController::~StackController()
 {
   if(x_buffer && y_buffer && eta_buffer)
   {
@@ -66,7 +67,7 @@ InvertMotorNStep::~InvertMotorNStep()
   if(YNoiseGen) delete YNoiseGen;
 }
 
-
+/*
 void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
 {
   assert(sensornumber>=motornumber);

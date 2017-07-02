@@ -86,13 +86,14 @@ public:
   virtual matrix::Matrix getLastMotorValues();
   /// returns the last sensor values (useful for cross sensor coupling)
   virtual matrix::Matrix getLastSensorValues();
-
+  */
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;
 
   NoiseGenerator* BNoiseGen; ///< Noisegenerator for noisy bias
   NoiseGenerator* YNoiseGen; ///< Noisegenerator for noisy motor output
+  /*
   matrix::Matrix R; ///< C*A
   matrix::Matrix SmallID; ///< small identity matrix in the dimension of R
   matrix::Matrix xsi; ///< current output error
@@ -101,9 +102,11 @@ protected:
   double xsi_norm; ///< norm of matrix
   double xsi_norm_avg; ///< average norm of xsi (used to define whether Modell learns)
   double pain;         ///< if the modelling error (xsi) is too high we have a pain signal
+  */
   matrix::Matrix* x_buffer;
   matrix::Matrix* y_buffer;
   matrix::Matrix* eta_buffer;
+  /*
   matrix::Matrix zero_eta; // zero initialised eta
   matrix::Matrix x_smooth;
   //   matrix::Matrix z; ///< membrane potential
