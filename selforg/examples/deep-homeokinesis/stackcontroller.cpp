@@ -6,15 +6,15 @@
 using namespace matrix;
 using namespace std;
 
-StackController::StackController(const StackControllerConf& conf)
+StackController::StackController( const StackControllerConf& conf)
   : InvertMotorController(conf.buffersize, "StackController", "$Id$"){
   vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
   // memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
   A.reserve(5);
   
-  for (i=0;i<conf.nlayers;i++){
+  for (int i=0;i<conf.nlayers;i++){
     A.push_back(Matrix()); // add new zero matrix as an element in the vector
-    addInspectableMatrix("A"+str(i),&A[i],conf.someInternalParams, "model matrix"+str(i));
+    addInspectableMatrix("A"+to_string(i),&A[i],conf.someInternalParams, "model matrix"+to_string(i));
   }
   /*
   if(conf.useS)

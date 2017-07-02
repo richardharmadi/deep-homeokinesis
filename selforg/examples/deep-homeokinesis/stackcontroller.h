@@ -8,29 +8,31 @@
 #include <vector>
 
 using namespace std;
+
 typedef struct StackControllerConf{
   int buffersize; // size of the time-buffer for x,y,eta
   int nlayers; // size of the deep networks
+  bool someInternalParams; // if true, only some internal parameters are exported, all otherwise
 } StackControllerConf;
 
 class StackController : public InvertMotorController, public Teachable{
-
 public: 
    // Default Constructor
-  StackController(const StackControllerConf& conf =  getDefaultConf());
-
-  static StackControllerConf getDefaultConf(){
-		StackControllerConf c;
-    c.buffersize = 50;
-    c.nlayers = 2;
-  }
+  StackController(const StackControllerConf& conf=getDefaultConf());
 
   virtual void init(int sensornumber, int motornumber, int layernumber, RandGen* randGen = 0);
 
-/*
   // Destructor
   virtual ~StackController();
 
+  static StackControllerConf getDefaultConf(){
+    StackControllerConf c;
+    c.buffersize = 50;
+    c.nlayers = 2;
+    c.someInternalParams = true;
+    return c;
+  }
+  /*
   /// returns the number of sensors the controller was initialised with or 0 if not initialised
   virtual int getSensorNumber() const { return number_sensors; }
   /// returns the mumber of motors the controller was initialised with or 0 if not initialised
