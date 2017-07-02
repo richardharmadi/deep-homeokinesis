@@ -26,8 +26,8 @@
 #include <assert.h>
 #include <cmath>
 
-#include <selforg/matrix.h>
-#include <selforg/noisegenerator.h>
+#include <selforg/matrix/matrix.h>
+#include <selforg/utils/noisegenerator.h>
 
 typedef struct InvertMotorNStepConf {
   int buffersize; ///< buffersize size of the time-buffer for x,y,eta
