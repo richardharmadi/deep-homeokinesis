@@ -5,6 +5,7 @@ using namespace std;
 
 #include <selforg/controller/sinecontroller.h>
 #include <selforg/controller/invertmotorspace.h>
+#include <selforg/controller/invertmotornstep.h>
 
 const int MNumber = 2;
 const int SNumber = 2;
@@ -27,7 +28,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 
 int main(){
 
-  AbstractController* controller = new InvertMotorSpace(10);
+  AbstractController* controller = new InvertMotorNStep(10);
   controller->init(2,2); // initialise with 2 motors and 2 sensors
   controller->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
   controller->print(stderr,0); // print parameters (see Configurable) to stderr

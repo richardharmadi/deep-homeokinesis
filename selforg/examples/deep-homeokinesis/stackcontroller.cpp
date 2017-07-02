@@ -7,8 +7,7 @@ using namespace matrix;
 using namespace std;
 
 StackController::StackController(const StackControllerConf& conf)
-    : InvertMotorController(conf.buffersize, "StackController", "$Id$"), conf(conf)
-{
+  : InvertMotorController(conf.buffersize, "StackController", "$Id$"){
   vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
   // memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
   A.reserve(5);
