@@ -32,7 +32,7 @@ public:
     c.someInternalParams = true;
     return c;
   }
-  /*
+  
   /// returns the number of sensors the controller was initialised with or 0 if not initialised
   virtual int getSensorNumber() const { return number_sensors; }
   /// returns the mumber of motors the controller was initialised with or 0 if not initialised
@@ -51,23 +51,23 @@ public:
 
   // loads the controller values from a given file.
   virtual bool restore(FILE* f);
-
+  /*
   //===== INSPECTABLE =====//
   virtual std::list<ILayer> getStructuralLayers() const;
   virtual std::list<IConnection> getStructuralConnections() const;
-
+  */
   //===== TEACHABLE =========//
   // The given motor teaching signal is used for this timestep.
   // It is used as a feed forward teaching signal for the controller.
   // Please note, that the teaching signal has to be given each timestep
   // for a continuous teaching process.
   
-  virtual void setMotorTeachingSignal(const motor* teaching, int len);
+  //virtual void setMotorTeachingSignal(const motor* teaching, int len);
 
   // The given sensor teaching signal (distal learning) is used for this timestep.
   // First the belonging motor teachung signal is calculated by the inverse model.
   // See setMotorTeachingSignal
-  virtual void setSensorTeachingSignal(const sensor* teaching, int len);
+  //virtual void setSensorTeachingSignal(const sensor* teaching, int len);
 
   //===== New TEACHING interface ======//
   // The given motor teaching signal is used for this timestep.
@@ -86,8 +86,9 @@ public:
   virtual matrix::Matrix getLastMotorValues();
   /// returns the last sensor values (useful for cross sensor coupling)
   virtual matrix::Matrix getLastSensorValues();
-  */
+
 protected:
+  StackControllerConf conf;
   unsigned short number_sensors;
   unsigned short number_motors;
 
@@ -132,9 +133,7 @@ protected:
 
   paramval noiseY; ///< noise strength for y
 
-  StackControllerConf conf;
-
-  /// puts the sensors in the ringbuffer, generate controller values and put them in the
+   /// puts the sensors in the ringbuffer, generate controller values and put them in the
   //  ringbuffer as well
   virtual void fillBuffersAndControl(const sensor* x_, int number_sensors,
                              motor* y_, int number_motors);

@@ -79,7 +79,7 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
     conf.numberContext = number_sensors;
 
   //  z.set(number_motors,1);
-  A.set(number_sensors, number_motors);
+  A[1].set(number_sensors, number_motors);
   // S gets context sensors
   if (conf.useS) S.set(number_sensors, conf.numberContext);
   // S gets first and second derivative of context sensors
@@ -105,7 +105,7 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   //  YNoiseGen = new WhiteUniformNoise();
   YNoiseGen->init(number_motors);
 
-  A.toId(); // set A to identity matrix;
+  A[1].toId(); // set A to identity matrix;
   //  if (conf.useS) S.mapP(randGen, random_minusone_to_one)*0.01; // set S to small random matrix;
   // if (conf.useSD) S.mapP(randGen, random_minusone_to_one)*0.01; // set SD to small random matrix;
 
@@ -231,7 +231,7 @@ double InvertMotorNStep::regularizedInverse(double v)
 //  @param delay 0 for no delay and n>0 for n timesteps delay in the SML
 void InvertMotorNStep::calcEtaAndBufferIt(int delay)
 {
-  // eta = A^-1 xsi (first shift in motor-space at current time)
+  // eta = A[1]^-1 xsi (first shift in motor-space at current time)
   //
   // Georg: a comment to the pseudoinverse: This does not quite give
   //  the right result in case of rectangular matrix. Consider:
@@ -244,7 +244,7 @@ void InvertMotorNStep::calcEtaAndBufferIt(int delay)
   //  For rectangular matrices it is better to use A^{-1} = (A + \lambda I)^{-1}
 
   // We use pseudoinverse U=A^T A -> eta = U^-1 A^T xsi // TODO add 0.01*I
-  Matrix eta = (A.multTM()^-1) * ( (A^T) * xsi );
+  Matrix eta = (A[1].multTM()^-1) * ( (A[1]^T) * xsi );
 
   // new 18.10.2007 by Georg
   // squash eta
@@ -275,7 +275,7 @@ void InvertMotorNStep::calcXsi(int delay)
 /// calculates the predicted sensor values
 Matrix InvertMotorNStep::model(const Matrix* x_buffer, int delay, const matrix::Matrix& y)
 {
-  Matrix xp = A * y + B;
+  Matrix xp = A[1] * y + B;
   if(conf.useS)
   {
     const Matrix& x_c = x_buffer[(t-delay)% buffersize].rows(number_sensors - conf.numberContext,number_sensors - 1);
@@ -345,7 +345,7 @@ void InvertMotorNStep::calcCandHUpdates(Matrix& C_update, Matrix& H_update, int 
     const Matrix g_2p_div_p  = Matrix::map2(g_ss_div_s, z, shift);
 
     const Matrix zeta = shift.multrowwise(g_prime_inv); // G'(Z)^-1 * (eta+v)
-    R                 = C * A;
+    R                 = C * A[1];
     // Georg 09.10.2008: consider to use different pseudoinverse: (R+\lambda I)^-1
     const Matrix chi  = (((R.multMT()+SmallID)^-1) * zeta);
     v                 = ((R^T) * chi).mapP(&shiftlimit,squash);// limit by shiftlimit // New Georg 10.2007;
@@ -441,13 +441,13 @@ void InvertMotorNStep::calcCandHUpdatesTeaching(Matrix& C_update, Matrix& H_upda
   const Matrix g_prime     = Matrix::map2(g_s, z, eta);
   const Matrix g_prime_inv = g_prime.map(one_over);
   const Matrix g_2p_div_p  = Matrix::map2(g_ss_div_s, z, eta);
-  R = C * A;
+  R = C * A[1];
   const Matrix zeta = eta.multrowwise(g_prime_inv);
   const Matrix chi = (R.multMT()^-1) * zeta;
   const Matrix v   = ((R + SmallID)^-1) * zeta;
 
   const Matrix rho = chi.multrowwise(zeta).multrowwise(g_2p_div_p) * -1;
-  C_update = (chi * (v^T) * (A^T) + (chi*teacher - rho)*(x^T)) * epsC * 0.1;
+  C_update = (chi * (v^T) * (A[1]^T) + (chi*teacher - rho)*(x^T)) * epsC * 0.1;
   H_update = (chi*teacher - rho) * epsC * 0.1;
 
   //  we use error_factor of 1 for teaching
@@ -507,12 +507,12 @@ void InvertMotorNStep::learnModel(int delay)
 
     if(adaptRate!=0)
     {
-      double normA = matrixNorm1(A);
+      double normA = matrixNorm1(A[1]);
       epsA=adaptMinMax(epsA, matrixNorm1(A_update) , normA/2500, normA/250, adaptRate, adaptRate*5);
       epsA = min( 2.0, epsA);
     }
 
-    A += A_update.mapP(&squashSize, squash);
+    A[1] += A_update.mapP(&squashSize, squash);
     B += B_update.mapP(&squashSize, squash);
   }
 };
@@ -561,7 +561,7 @@ void InvertMotorNStep::management()
 {
   if(dampA)
   {
-    A *= 1 - dampA * managementInterval;
+    A[1] *= 1 - dampA * managementInterval;
     B *= 1 - dampA * managementInterval;
   }
   if(dampS)
@@ -621,7 +621,7 @@ bool InvertMotorNStep::store(FILE* f) const
   // save matrix values
   C.store(f);
   H.store(f);
-  A.store(f);
+  A[1].store(f);
   B.store(f);
   if(conf.useS) S.store(f);
   if(conf.useSD) SD.store(f);
@@ -634,13 +634,13 @@ bool InvertMotorNStep::restore(FILE* f)
   // save matrix values
   C.restore(f);
   H.restore(f);
-  A.restore(f);
+  A[1].restore(f);
   B.restore(f);
   if(conf.useS) S.restore(f);
   if(conf.useSD) SD.restore(f);
   Configurable::parse(f);
   t=0; // set time to zero to ensure proper filling of buffers
-  return true;
+  return true; 
 }
 
 list<Inspectable::ILayer> InvertMotorNStep::getStructuralLayers() const
@@ -679,7 +679,7 @@ void InvertMotorNStep::setSensorTeachingSignal(const sensor* teaching, int len)
   assert(len == number_sensors);
   Matrix x_teaching(len,1,teaching);
   // calculate the y_teaching, that belongs to the distal teaching value by the inverse model.
-  y_teaching = (A.multTM()^(-1)) *  ((A^T) * (x_teaching-B)) ;
+  y_teaching = (A[1].multTM()^(-1)) *  ((A[1]^T) * (x_teaching-B)) ;
   y_teaching.toMap(clip095);
   useTeaching=true;
 }
@@ -700,7 +700,7 @@ void InvertMotorNStep::setMotorTeaching(const matrix::Matrix& teaching){
 void InvertMotorNStep::setSensorTeaching(const matrix::Matrix& teaching){
   assert(teaching.getM() == number_sensors && teaching.getN() == 1);
   // calculate the y_teaching, that belongs to the distal teaching value by the inverse model.
-  y_teaching = (A.pseudoInverse(0.001) * (teaching-B)).mapP(0.95, clip);
+  y_teaching = (A[1].pseudoInverse(0.001) * (teaching-B)).mapP(0.95, clip);
   useTeaching=true;
 }
 
