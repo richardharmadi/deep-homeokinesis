@@ -14,7 +14,6 @@ class StackInvertMotorNStep : public InvertMotorController, public Teachable{
 
 public:
   vector<NStepWrapper> controllers; // vector of controller that will be stacked
-  int nlayers;
 
   StackInvertMotorNStep(int buffersize, int nlayers);
 
@@ -38,14 +37,14 @@ public:
                               motor* , int number_motors);
 
   /**** INSPECTABLE ****/
-  virtual std::list<ILayer> getStructuralLayers() const;
-  virtual std::list<IConnection> getStructuralConnections() const;
+  //virtual std::list<ILayer> getStructuralLayers() const;
+  //virtual std::list<IConnection> getStructuralConnections() const;
 
 
   //**** New Stack functions ********//
-  matrix::Matrix& getC(int layernumber);
-  matrix::Matrix& getA(int layernumber);
-  virtual matrix::Matrix getPredictionFromLayer(int layernumber);
+  //matrix::Matrix& getC(int layernumber);
+  //matrix::Matrix& getA(int layernumber);
+  //virtual matrix::Matrix getPredictionFromLayer(int layernumber);
 
 protected:
   unsigned short number_sensors;
