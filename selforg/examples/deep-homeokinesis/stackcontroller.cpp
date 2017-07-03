@@ -7,44 +7,70 @@ using namespace matrix;
 using namespace std;
 
 StackController::StackController( const StackControllerConf& conf)
-  : InvertMotorController(conf.buffersize, "StackController", "$Id$"){
+  : InvertMotorController(conf.buffersize, "StackController", "$Id$"),conf(conf){
   vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
+  vector<matrix::Matrix> C; // vector of Controller Matrix
+  vector<matrix::Matrix> H; // vector of Controller Bias
+  vector<matrix::Matrix> B; ///< Model Bias
+  vector<matrix::Matrix> R; ///< C*A
+  matrix::Matrix SmallID; ///< small identity matrix in the dimension of R
+  matrix::Matrix xsi; ///< current output error
+  matrix::Matrix v;   ///< current reconstructed error
+  matrix::Matrix* x_buffer;
+  matrix::Matrix* y_buffer;
+  matrix::Matrix* eta_buffer;
+  matrix::Matrix zero_eta; // zero initialised eta
+  matrix::Matrix x_smooth;
+  matrix::Matrix y_teaching; ///< teaching motor signal
+  matrix::Matrix sensorweights; ///< sensor channel weight (each channel gets a certain importance)
+
   // memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
   A.reserve(5);
-  
+  C.reserve(5);
+  H.reserve(5);
+  B.reserve(5);
+  R.reserve(5);
+
   for (int i=0;i<conf.nlayers;i++){
     A.push_back(Matrix()); // add new zero matrix as an element in the vector
+    C.push_back(Matrix());
+    R.push_back(Matrix());
+    H.push_back(Matrix());
+    B.push_back(Matrix());
+
     addInspectableMatrix("A"+to_string(i),&A[i],conf.someInternalParams, "model matrix"+to_string(i));
+    addInspectableMatrix("C"+to_string(i),&A[i],conf.someInternalParams,"controller matrix"+to_string(i));
+    addInspectableMatrix("R"+to_string(i), &R[i], conf.someInternalParams, "linear Response matrix"+to_string(i));
+    addInspectableMatrix("H"+to_string(i), &H[i], false, "controller bias"+to_string(i));
+    addInspectableMatrix("B"+to_string(i), &B[i], false, "model bias"+to_string(i));
+
+    if(!conf.someInternalParams){
+      addInspectableMatrix("yteach"+to_string(i), &y_teaching[i], false, "motor teaching signal"+to_string(i));
+      addInspectableMatrix("xsi"+to_string(i), &xsi[i], false, "prediction error"+to_string(i));
+      addInspectableMatrix("v"+to_string(i), &v[i], false, "postdiction error"+to_string(i));
+    }
+
+    addInspectableValue("epsA", &epsA, "learning rate of the Model");
+    addInspectableValue("epsC", &epsC, "learning rate of the Controller");
+    addInspectableValue("xsi_norm", &xsi_norm, "1-norm of prediction error");
+    addInspectableValue("xsi_norm_avg", &xsi_norm_avg, "averaged 1-norm of prediction error");
+    addInspectableValue("E", &E_val, "value of error function");
   }
   /*
   if(conf.useS)
     addInspectableMatrix("S", &S, conf.someInternalParams, "extended Model matrix");
   if(conf.useSD)
     addInspectableMatrix("SD", &SD, conf.someInternalParams, "extended Model matrix (deriv)");
-
-  addInspectablveMatrix("C", &C, conf.someInternalParams, "controller matrix");
-  addInspectableMatrix("R", &R, conf.someInternalParams, "linear Response matrix");
-  addInspectableMatrix("H", &H, false, "controller bias");
-  addInspectableMatrix("B", &B, false, "model bias");
-  if(!conf.someInternalParams){
-    addInspectableMatrix("yteach", &y_teaching, false, "motor teaching signal");
-    addInspectableMatrix("xsi", &xsi, false, "prediction error");
-    addInspectableMatrix("v", &v, false, "postdiction error");
-  }
-  addInspectableValue("epsA", &epsA, "learning rate of the Model");
-  addInspectableValue("epsC", &epsC, "learning rate of the Controller");
-  addInspectableValue("xsi_norm", &xsi_norm, "1-norm of prediction error");
-  addInspectableValue("xsi_norm_avg", &xsi_norm_avg, "averaged 1-norm of prediction error");
-  addInspectableValue("E", &E_val, "value of error function");
+  
   addInspectableValue("pain", &pain, "internal pain signal");
   addInspectableValue("reinforce", &reinforcement, "reward value");
 
   managementInterval=10;
   useTeaching=false;
   reinforcement=0;
-  E_val=0;
   reinforcefactor=0;
   */
+  E_val=0;
   BNoiseGen = 0;
   YNoiseGen = 0;
   
@@ -53,7 +79,6 @@ StackController::StackController( const StackControllerConf& conf)
   eta_buffer = 0;
   
 };
-
 
 StackController::~StackController()
 {
@@ -67,23 +92,54 @@ StackController::~StackController()
   if(YNoiseGen) delete YNoiseGen;
 }
 
-/*
-void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
+bool StackController::store(FILE* f) const
+{
+  for(int i=0;i<conf.nlayers;i++){
+    // save matrix values
+    C[i].store(f);
+    H[i].store(f);
+    A[i].store(f);
+    B[i].store(f);
+    //if(conf.useS) S.store(f);
+    //if(conf.useSD) SD.store(f);
+    Configurable::print(f,0);  
+  }
+  return true;
+}
+
+bool StackController::restore(FILE* f)
+{
+  for(int i=0;i<conf.nlayers;i++){
+    // save matrix values
+    C[i].restore(f);
+    H[i].restore(f);
+    A[i].restore(f);
+    B[i].restore(f);
+    //if(conf.useS) S.restore(f);
+    //if(conf.useSD) SD.restore(f);
+    Configurable::parse(f);
+    t=0; // set time to zero to ensure proper filling of buffers
+  }
+  return true; 
+}
+
+void StackController::init(int sensornumber, int motornumber, RandGen* randGen)
 {
   assert(sensornumber>=motornumber);
   if(!randGen) randGen = new RandGen(); // this gives a small memory leak
 
   number_motors  = motornumber;
   number_sensors = sensornumber;
-  if(conf.numberContext == 0) // we just declare all sensors as context
-    conf.numberContext = number_sensors;
+  //if(conf.numberContext == 0) // we just declare all sensors as context
+      //conf.numberContext = number_sensors;
 
+  // --- richad : put for loop here for vector initialization
   //  z.set(number_motors,1);
-  A[1].set(number_sensors, number_motors);
+  A.set(number_sensors, number_motors);
   // S gets context sensors
-  if (conf.useS) S.set(number_sensors, conf.numberContext);
+  // if (conf.useS) S.set(number_sensors, conf.numberContext);
   // S gets first and second derivative of context sensors
-  if (conf.useSD) SD.set(number_sensors, number_sensors*2);
+  //if (conf.useSD) SD.set(number_sensors, number_sensors*2);
   C.set(number_motors,  number_sensors);
   H.set(number_motors,  1);
   B.set(number_sensors, 1);
@@ -105,7 +161,8 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   //  YNoiseGen = new WhiteUniformNoise();
   YNoiseGen->init(number_motors);
 
-  A[1].toId(); // set A to identity matrix;
+  //-- richad : put another for loop here
+  A.toId(); // set A to identity matrix;
   //  if (conf.useS) S.mapP(randGen, random_minusone_to_one)*0.01; // set S to small random matrix;
   // if (conf.useSD) S.mapP(randGen, random_minusone_to_one)*0.01; // set SD to small random matrix;
 
@@ -135,7 +192,7 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   t_rand = int(randGen->rand()*10);
   initialised = true;
 }
-
+/*
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
 void InvertMotorNStep::step(const sensor* x_, int number_sensors,
                             motor* y_, int number_motors)
@@ -613,34 +670,6 @@ void InvertMotorNStep::limitC(matrix::Matrix& wm, unsigned int rfSize)
       if(std::abs(i-j) > (int)rfSize-1) wm.val(i,j)= 0;
     }
   }
-}
-
-
-bool InvertMotorNStep::store(FILE* f) const
-{
-  // save matrix values
-  C.store(f);
-  H.store(f);
-  A[1].store(f);
-  B.store(f);
-  if(conf.useS) S.store(f);
-  if(conf.useSD) SD.store(f);
-  Configurable::print(f,0);
-  return true;
-}
-
-bool InvertMotorNStep::restore(FILE* f)
-{
-  // save matrix values
-  C.restore(f);
-  H.restore(f);
-  A[1].restore(f);
-  B.restore(f);
-  if(conf.useS) S.restore(f);
-  if(conf.useSD) SD.restore(f);
-  Configurable::parse(f);
-  t=0; // set time to zero to ensure proper filling of buffers
-  return true; 
 }
 
 list<Inspectable::ILayer> InvertMotorNStep::getStructuralLayers() const

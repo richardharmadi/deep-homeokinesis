@@ -28,7 +28,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 
 int main(){
 
-  AbstractController* controller = new InvertMotorNStep(10);
+  AbstractController* controller = new InvertMotorNStep();
   controller->init(2,2); // initialise with 2 motors and 2 sensors
   controller->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
   controller->print(stderr,0); // print parameters (see Configurable) to stderr

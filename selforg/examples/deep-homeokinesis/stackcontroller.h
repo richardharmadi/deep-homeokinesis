@@ -13,7 +13,13 @@ typedef struct StackControllerConf{
   int buffersize; // size of the time-buffer for x,y,eta
   int nlayers; // size of the deep networks
   bool someInternalParams; // if true, only some internal parameters are exported, all otherwise
-} StackControllerConf;
+  //int numberContext; // number of context sensors(considered at the end of the sensor vector, if not 0 then S will only get them as input)
+  double cInit; // size of the C matrix (controller) to initialised with
+  double cNonDiag; // size of the non diagonal elements in respect to the diagonal (cInit) ones
+  double cNonDiagAbs; // value of the nondiagonal elements
+  //bool useS; // decide whether to use the S matrix in addition to A matrix (uses sensors as an extended model)
+  //bool useSD; // decide whether to use the SD matrix (S derivative) in addition to the A matrix (uses first and second derivative as an extended model)
+} StackControllerConf; 
 
 class StackController : public InvertMotorController, public Teachable{
 public: 
@@ -30,6 +36,12 @@ public:
     c.buffersize = 50;
     c.nlayers = 2;
     c.someInternalParams = true;
+    //c.numberContext =0;
+    c.cInit =1.0;
+    c.cNonDiag =0;
+    c.cNonDiagAbs =0.0;
+    //c.useS = false;
+    //c.useSD = false;
     return c;
   }
   
@@ -94,29 +106,15 @@ protected:
 
   NoiseGenerator* BNoiseGen; ///< Noisegenerator for noisy bias
   NoiseGenerator* YNoiseGen; ///< Noisegenerator for noisy motor output
-  /*
-  matrix::Matrix R; ///< C*A
-  matrix::Matrix SmallID; ///< small identity matrix in the dimension of R
-  matrix::Matrix xsi; ///< current output error
-  matrix::Matrix v;   ///< current reconstructed error
+  
   double E_val; ///< value of Error function
   double xsi_norm; ///< norm of matrix
   double xsi_norm_avg; ///< average norm of xsi (used to define whether Modell learns)
   double pain;         ///< if the modelling error (xsi) is too high we have a pain signal
-  */
-  matrix::Matrix* x_buffer;
-  matrix::Matrix* y_buffer;
-  matrix::Matrix* eta_buffer;
-  /*
-  matrix::Matrix zero_eta; // zero initialised eta
-  matrix::Matrix x_smooth;
-  //   matrix::Matrix z; ///< membrane potential
-  matrix::Matrix y_teaching; ///< teaching motor signal
   bool useTeaching; ///< flag whether there is an actual teachning signal or not
   int t_rand; ///< initial random time to avoid syncronous management of all controllers
 
-  matrix::Matrix sensorweights; ///< sensor channel weight (each channel gets a certain importance)
-
+  /*
   // factor to teach for continuity: subsequent motor commands should not differ too much
   double continuity;
   double modelCompliant; ///< learning factor for model (or sensor) compliant learning
@@ -132,7 +130,7 @@ protected:
   paramval cdiagabs;
 
   paramval noiseY; ///< noise strength for y
-
+  */
    /// puts the sensors in the ringbuffer, generate controller values and put them in the
   //  ringbuffer as well
   virtual void fillBuffersAndControl(const sensor* x_, int number_sensors,
