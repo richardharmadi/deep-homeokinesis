@@ -17,10 +17,10 @@ void StackInvertMotorNStep::addLayer(NStepWrapper cont){
 
 StackInvertMotorNStep::~StackInvertMotorNStep()
 {
-  NStepWrapper pd;
+  NStepWrapper* ptr;
   for(vector<NStepWrapper>::iterator it = controllers.begin(); it!= controllers.end();++it){
-    pd = *it;
-    delete pd;
+    ptr = &(*it);
+    delete ptr;
   }
   controllers.clear();
 }
