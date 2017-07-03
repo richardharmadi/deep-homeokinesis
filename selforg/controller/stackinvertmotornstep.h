@@ -2,9 +2,10 @@
 #define __STACKINVERTMOTORNSTEP_H
 
 #include "invertmotornstep.h"
-#include "nstepwrapper."
+#include "nstepwrapper.h"
 #include <vector>
 
+using namespace std;
 /**
  * class for robot controller that uses the georg's invertmotornstep network
  * (deep networks)
@@ -15,10 +16,12 @@ public:
   vector<NStepWrapper> controllers; // vector of controller that will be stacked
   int nlayers;
 
-  StackInvertMotorNStep(int nlayers);
+  StackInvertMotorNStep(int buffersize, int nlayers);
 
   virtual void init(int sensornumber, int motornumber, RandGen* randGen = 0);
 
+  virtual void addLayer(NStepWrapper cont);
+  
   virtual ~StackInvertMotorNStep();
 
   /// returns the number of sensors the controller was initialised with or 0 if not initialised
@@ -41,7 +44,7 @@ public:
 
   //**** New Stack functions ********//
   matrix::Matrix& getC(int layernumber);
-  matrix::Matrix& getA(inn layernumber);
+  matrix::Matrix& getA(int layernumber);
   virtual matrix::Matrix getPredictionFromLayer(int layernumber);
 
 protected:

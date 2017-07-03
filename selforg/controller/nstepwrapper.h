@@ -9,7 +9,7 @@ class NStepWrapper : public InvertMotorNStep{
 
 public:
   virtual matrix::Matrix model(const matrix::Matrix* x_buffer,int delay, const matrix::Matrix& y){
-    return InvertMotorNStep::model(x_buffer,delay,y)
+    return InvertMotorNStep::model(x_buffer,delay,y);
   }
 
 };

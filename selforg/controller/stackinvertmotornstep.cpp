@@ -11,7 +11,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   controllers.reserve(nlayers);
 };
 
-StackInvertMotorNStep::add(NStepWrapper cont){
+void StackInvertMotorNStep::addLayer(NStepWrapper cont){
   controllers.push_back(cont);
 }
 /*
