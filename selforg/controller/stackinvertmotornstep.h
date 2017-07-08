@@ -43,9 +43,9 @@ public:
   //**** New Stack functions ********//
   //matrix::Matrix& getC(int layernumber);
   //matrix::Matrix& getA(int layernumber);
-  virtual vector<sensor> getPredInputFromLayer(int layernumber);
-  virtual vector<motor> getInvOutputFromLayer(int layernumber);
-  virtual vector<sensor> getInvInputFromLayer(int layernumber);
+  virtual sensor* getPredInputFromLayer(int layernumber);
+  virtual motor* getInvOutputFromLayer(int layernumber);
+  virtual sensor* getInvInputFromLayer(int layernumber);
   virtual int getNLayer() const { return actual_nlayer; };
 
 protected:

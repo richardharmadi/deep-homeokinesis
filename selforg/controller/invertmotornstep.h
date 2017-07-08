@@ -74,7 +74,7 @@ public:
   virtual void stepNoLearning(const sensor* , int number_sensors,
                               motor* , int number_motors);
 
-  virtual void stepNextLayer(const sensor* , int number_sensors, motor* , int number_motors, motor* yinv);
+  virtual void stepNextLayer(sensor* , int number_sensors, motor* , int number_motors, motor* yinv);
 
   /**** STOREABLE ****/
   /** stores the controller values to a given file. */
@@ -224,6 +224,8 @@ protected:
   //  ringbuffer as well
   virtual void fillBuffersAndControl(const sensor* x_, int number_sensors,
                              motor* y_, int number_motors);
+
+  virtual void fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv);
 
   /// calculates the first shift into the motor space useing delayed motor values.
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop

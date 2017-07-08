@@ -741,23 +741,23 @@ void InvertMotorNStep::setReinforcement(double reinforcement)
   this->reinforcefactor = 1-0.99*this->reinforcement;
 }
 
-void InvertMotorNStep::getPredSensorValue(const sensor* xpred_){
+void InvertMotorNStep::getPredSensorValue(sensor* xpred_){
   xpred.convertToBuffer(xpred_,number_sensors);
 }
 
-void InvertMotorNStep::getInvMotorValue(const motor* yinv_){
+void InvertMotorNStep::getInvMotorValue(motor* yinv_){
   yinv = eta_buffer[(t-1)%buffersize] - getLastMotorValues();
   yinv.convertToBuffer(yinv_,number_motors);
 }
 
-void InvertMotorNStep::getInvSensorValue(const sensor* xinv_){
+void InvertMotorNStep::getInvSensorValue(sensor* xinv_){
   Matrix Cinv = (C.multTM()^-1) * (C^T); //using Moore-Penrose pseudoinverse so we do not have to make sure the matrix is invertible
-  Matrix yprime = yinv.getInvMotorValue().map(ginv); //tanh-1(invert output)
+  Matrix yprime = yinv.map(ginv); //tanh-1(invert output)
   Matrix result = Cinv * yprime;
   result.convertToBuffer(xinv_,number_sensors);
 }
 
-void InvertMotorNStep::stepNextLayer(const sensor* x_, int number_sensors, motor* y_, int number_motors,motor* yinv){
+void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   fillBuffersAndControlNextLayer(x_,number_sensors,y_,number_motors,yinv);
   if (t>buffersize){
     int delay = max(int(s4delay)-1,0);
@@ -766,11 +766,11 @@ void InvertMotorNStep::stepNextLayer(const sensor* x_, int number_sensors, motor
     learnController(delay);
     learnModel(delay);
   }
-  t++
+  t++;
 };
 
-void InvertMotorNStep::fillBuffersAndControlNextLayer(const sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
-  assert((unisigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
+void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
+  assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
 
   Matrix x(number_sensors,1,x_);
   putInBuffer(x_buffer,x);
@@ -781,8 +781,8 @@ void InvertMotorNStep::fillBuffersAndControlNextLayer(const sensor* x_, int numb
     Matrix y_noise = noiseMatrix(y.getM(),y.getN(), *YNoiseGen, -noiseY, noiseY);
     y += y_noise;
   }
-  Matrix yinv(number_motors,1,yinv);
-  y += yinv;
+  Matrix yinvMatrix(number_motors,1,yinv);
+  y += yinvMatrix;
   y *= 0.5; //averaging between new y and reconstructed y from previous layer
 
   if (activeExplore != 0)
