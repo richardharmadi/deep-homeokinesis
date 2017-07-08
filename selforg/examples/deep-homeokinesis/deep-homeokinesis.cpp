@@ -27,9 +27,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 int main(){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
-  InvertMotorNStep* controller0 = new InvertMotorNStep(); // invertmotornstep object
-  InvertMotorNStep* controller1 = new InvertMotorNStep();
-  InvertMotorNStep* controller2 = new InvertMotorNStep();
+  InvertMotorNStep controller0,controller1,controller2; // invertmotornstep object
   main_controller->addLayer(controller0);
   main_controller->addLayer(controller1);
   main_controller->addLayer(controller2);
@@ -44,8 +42,8 @@ int main(){
   //double buffersensor[SNumber];// temp vector of inverted input
   //double buffermotor[MNumber]; // temp vector of inverted output
 
-  vector<double*> nextsensor;
-  vector<double*> nextmotor;
+  vector<double>& nextsensor;
+  vector<double>& nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
