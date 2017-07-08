@@ -11,7 +11,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   controllers.reserve(nlayers); // memory reserve
 };
 
-void StackInvertMotorNStep::addLayer (InvertMotorNStep* cont){
+void StackInvertMotorNStep::addLayer (InvertMotorNStep cont){
   controllers.push_back(cont);
   actual_nlayer+=1;
 }
@@ -42,12 +42,6 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
 void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
                             motor* y_, int number_motors)
 {
-  /*
-  // Matrix of output from previous layer
-  matrix::Matrix Xpred;
-  matrix::Matrix Yinv;
-  matrix::Matrix Xinv;
-  */
 
   // buffer for previous layer output
   double temp_pred_x[number_sensors];
@@ -97,20 +91,26 @@ sensor* StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
 
 bool StackInvertMotorNStep::store(FILE* f) const
 {
+  matrix::Matrix Xpred(number_sensors,1,pred_x);
+  matrix::Matrix Yinv(number_motors,1,inv_y);
+  matrix::Matrix Xinv(number_sensors,1,inv_x); 
   // save matrix values
-  pred_x.store(f);
-  inv_y.store(f);
-  inv_x.store(f);
+  Xpred.store(f);
+  Yinv.store(f);
+  Xinv.store(f);
   Configurable::print(f,0);
   return true;
 }
 
 bool StackInvertMotorNStep::restore(FILE* f)
 {
+  matrix::Matrix Xpred(number_sensors,1,pred_x);
+  matrix::Matrix Yinv(number_motors,1,inv_y);
+  matrix::Matrix Xinv(number_sensors,1,inv_x); 
   // save matrix values
-  pred_x.restore(f);
-  inv_y.restore(f);
-  inv_x.restore(f);
+  Xpred.restore(f);
+  Yinv.restore(f);
+  Xinv.restore(f);
   Configurable::parse(f);
   t=0; // set time to zero to ensure proper filling of buffers
   return true;
