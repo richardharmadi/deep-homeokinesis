@@ -41,11 +41,11 @@ int main(){
   // sensor and motor arrays (doubles*)
   double sensors[SNumber];
   double motors[MNumber];
-  vector<sensor> sinv;// temp vector of inverted input
-  vector<motor> minv; // temp vector of inverted output
+  //double buffersensor[SNumber];// temp vector of inverted input
+  //double buffermotor[MNumber]; // temp vector of inverted output
 
-  vector<vector<sensor>> nextsensor;
-  vector<vector<motor>> nextmotor;
+  vector<double*> nextsensor;
+  vector<double*> nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
@@ -72,15 +72,15 @@ int main(){
       nextmotor.push_back(main_controller.getInvOutputFromLayer(i));
     }
 
-    cout << i << " Sensor X1: " << nextsensor[0].at(0) << ", " << nextsensor[0].at(1);
-    cout << i << " Motor Y1: " << nextmotor[0].at(0) << ", " << nextmotor[0].at(1);
+    cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+    cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
 
-    cout << i << " Sensor X2: " << nextsensor[1].at(0) << ", " << nextsensor[1].at(1);
-    cout << i << " Motor Y2: " << nextmotor[1].at(0) << ", " << nextmotor[1].at(1);
+    cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
+    cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
 
 
-    cout << i << " Sensor X3: " << nextsensor[2].at(0) << ", " << nextsensor[2].at(1);
-    cout << i << " Motor Y3: " << nextmotor[2].at(0) << ", " << nextmotor[2].at(1);
+    cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1];
+    cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1];
   }
   delete main_controller;
   delete controller0;

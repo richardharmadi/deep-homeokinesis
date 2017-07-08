@@ -56,10 +56,10 @@ private:
   matrix::Matrix arrSensor;
   matrix::Matrix arrMotor;
   int actual_nlayer = 0;
-  vector<vector<sensor>>pred_x;
-  vector<vector<motor>>inv_y;
-  vector<vector<sensor>>inv_x; // reconstructed input starting from first layer
-  vector<vector<motor>>ynext; // output starting from the second layer
+  vector<sensor*>pred_x;
+  vector<motor*>inv_y;
+  vector<sensor*>inv_x; // reconstructed input starting from first layer
+  vector<motor*>ynext; // output starting from the second layer
 };
 
 #endif

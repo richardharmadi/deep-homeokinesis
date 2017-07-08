@@ -102,11 +102,11 @@ public:
   void getLastMotors(motor* motors, int len);
   void getLastSensors(sensor* sensors, int len);
   // Richard 03.07.2017 -- get predicted sensor value from the layer
-  void getPredSensorValue(sensor* xpred_,matrix::Matrix& out);
+  void getPredSensorValue(sensor* xpred_);
   // Richard 06.07.2017 -- get inversed output from the model
-  void getInvMotorValue(motor* yinv_,matrix::Matrix& out);
+  void getInvMotorValue(motor* yinv_);
   // Richard 06.07.2017 -- get reconstructed input
-  void getInvSensorValue(sensor* xinv_,matrix::Matrix& out);
+  void getInvSensorValue(sensor* xinv_);
 
   /**** New TEACHING interface ****/
   /** The given motor teaching signal is used for this timestep.
@@ -234,7 +234,7 @@ protected:
   virtual void calcXsi(int delay);
 
   // calculates xsi for the current time step for the model in nextlayer
-  virtual void calcNextXsi(matrix:Matrix xpred);
+  virtual void calcNextXsi(matrix::Matrix xpred);
   /// learn H,C with motors y and corresponding sensors x
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void learnController(int delay);

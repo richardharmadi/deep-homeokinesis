@@ -82,14 +82,14 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   */
 }
 
-vector<sensor> getPredInputFromLayer(int layernumber){
+double* StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
   return pred_x[layernumber]; 
 }
 
-vector<motor> getInvOutputFromLayer(int layernumber){
+double* StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
   return inv_y[layernumber];
 }
 
-vector<sensor> getInvInputFromLayer(int layernumber){
+double* StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
   return inv_x[layernumber];
 }
