@@ -26,10 +26,10 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 
 int main(){
 
-  AbstractController* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
-  AbstractController* controller0 = new InvertMotorNStep(); // invertmotornstep object
-  AbstractController* controller1 = new InvertMotorNStep();
-  AbstractController* controller2 = new InvertMotorNStep();
+  StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
+  InvertMotorNStep* controller0 = new InvertMotorNStep(); // invertmotornstep object
+  InvertMotorNStep* controller1 = new InvertMotorNStep();
+  InvertMotorNStep* controller2 = new InvertMotorNStep();
   main_controller->addLayer(controller0);
   main_controller->addLayer(controller1);
   main_controller->addLayer(controller2);
@@ -67,9 +67,9 @@ int main(){
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
-    for(int i=0;i<main_controller.getNLayer;i++){
-      nextsensor.push_back(main_controller.getInvInputFromLayer(i));
-      nextmotor.push_back(main_controller.getInvOutputFromLayer(i));
+    for(int j=0;j<main_controller->getNLayer();j++){
+      nextsensor.push_back(main_controller->getInvInputFromLayer(j));
+      nextmotor.push_back(main_controller->getInvOutputFromLayer(j));
     }
 
     cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];

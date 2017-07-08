@@ -235,8 +235,6 @@ protected:
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void calcXsi(int delay);
 
-  // calculates xsi for the current time step for the model in nextlayer
-  virtual void calcNextXsi(matrix::Matrix xpred);
   /// learn H,C with motors y and corresponding sensors x
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void learnController(int delay);
