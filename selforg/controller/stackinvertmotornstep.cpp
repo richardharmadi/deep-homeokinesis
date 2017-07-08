@@ -91,6 +91,7 @@ sensor* StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
 
 bool StackInvertMotorNStep::store(FILE* f) const
 {
+  /*
   matrix::Matrix Xpred(number_sensors,1,pred_x);
   matrix::Matrix Yinv(number_motors,1,inv_y);
   matrix::Matrix Xinv(number_sensors,1,inv_x); 
@@ -99,11 +100,13 @@ bool StackInvertMotorNStep::store(FILE* f) const
   Yinv.store(f);
   Xinv.store(f);
   Configurable::print(f,0);
+  */
   return true;
 }
 
 bool StackInvertMotorNStep::restore(FILE* f)
 {
+  /*
   matrix::Matrix Xpred(number_sensors,1,pred_x);
   matrix::Matrix Yinv(number_motors,1,inv_y);
   matrix::Matrix Xinv(number_sensors,1,inv_x); 
@@ -113,5 +116,6 @@ bool StackInvertMotorNStep::restore(FILE* f)
   Xinv.restore(f);
   Configurable::parse(f);
   t=0; // set time to zero to ensure proper filling of buffers
+  */
   return true;
 }
