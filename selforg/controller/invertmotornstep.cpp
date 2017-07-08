@@ -132,10 +132,10 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   //  if (conf.useS) S.mapP(randGen, random_minusone_to_one)*0.01; // set S to small random matrix;
   // if (conf.useSD) S.mapP(randGen, random_minusone_to_one)*0.01; // set SD to small random matrix;
 
-  if(conf.initialC.getM() != number_motors || conf.initialC.getN() != number_sensors ){
+  if(conf.initialC.getM() != number_motors || conf.initialC.getN() != number_sensors){
     if(!conf.initialC.isNulltimesNull()) cerr << "dimension of Init C are not correct, default is used! \n";
-    // initialise the C matrix with identity + noise scaled to cInit value
-    C = ((C^0) + C.mapP(randGen, random_minusone_to_one) * conf.cNonDiag) * conf.cInit;
+    //initialise the C matrix with identity +noise scaled to cInit value
+    C= ((C^0) + C.mapP(randGen, random_minusone_to_one) * conf.cNonDiag) * conf.cInit;
   }else{
     C=conf.initialC; // use given matrix
   }
@@ -244,7 +244,6 @@ void InvertMotorNStep::fillBuffersAndControl(const sensor* x_, int number_sensor
   y.convertToBuffer(y_, number_motors);
 }
 
-
 double InvertMotorNStep::regularizedInverse(double v)
 {
   return 1/(fabs(v)+0.1);
@@ -289,11 +288,11 @@ void InvertMotorNStep::calcXsi(int delay)
   const Matrix& x     = x_buffer[t% buffersize];
   const Matrix& y     = y_buffer[(t - 1 - delay) % buffersize];
   //  xsi = (x -  model(x_buffer, 1 , y));
+  xpred = model(x_buffer,1,y); // new Richard 03.07.2017
   xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
   //  xsi_norm = matrixNorm1(xsi);
   xsi_norm = xsi.multTM().val(0,0);
 }
-
 
 /// calculates the predicted sensor values
 Matrix InvertMotorNStep::model(const Matrix* x_buffer, int delay, const matrix::Matrix& y)
@@ -742,3 +741,58 @@ void InvertMotorNStep::setReinforcement(double reinforcement)
   this->reinforcefactor = 1-0.99*this->reinforcement;
 }
 
+void InvertMotorNStep::getPredSensorValue(const sensor* xpred_){
+  xpred.convertToBuffer(xpred_,number_sensors);
+}
+
+void InvertMotorNStep::getInvMotorValue(const motor* yinv_){
+  yinv = eta_buffer[(t-1)%buffersize] - getLastMotorValues();
+  yinv.convertToBuffer(yinv_,number_motors);
+}
+
+void InvertMotorNStep::getInvSensorValue(const sensor* xinv_){
+  Matrix Cinv = (C.multTM()^-1) * (C^T); //using Moore-Penrose pseudoinverse so we do not have to make sure the matrix is invertible
+  Matrix yprime = yinv.getInvMotorValue().map(ginv); //tanh-1(invert output)
+  Matrix result = Cinv * yprime;
+  result.convertToBuffer(xinv_,number_sensors);
+}
+
+void InvertMotorNStep::stepNextLayer(const sensor* x_, int number_sensors, motor* y_, int number_motors,motor* yinv){
+  fillBuffersAndControlNextLayer(x_,number_sensors,y_,number_motors,yinv);
+  if (t>buffersize){
+    int delay = max(int(s4delay)-1,0);
+    calcXsi(delay);
+    calcEtaAndBufferIt(delay);
+    learnController(delay);
+    learnModel(delay);
+  }
+  t++
+};
+
+void InvertMotorNStep::fillBuffersAndControlNextLayer(const sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
+  assert((unisigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
+
+  Matrix x(number_sensors,1,x_);
+  putInBuffer(x_buffer,x);
+  x_smooth = calculateSmoothValues(x_buffer,t<s4avg?1:int(max(1.0,s4avg)));
+
+  Matrix y = calculateControllerValues(x_smooth);
+  if(noiseY!=0){
+    Matrix y_noise = noiseMatrix(y.getM(),y.getN(), *YNoiseGen, -noiseY, noiseY);
+    y += y_noise;
+  }
+  Matrix yinv(number_motors,1,yinv);
+  y += yinv;
+  y *= 0.5; //averaging between new y and reconstructed y from previous layer
+
+  if (activeExplore != 0)
+    {
+      y += eta_buffer[(t-1)%buffersize]*activeExplore;
+    }
+
+  if((t+t_rand)%managementInterval==0) management();
+
+  putInBuffer(y_buffer,y);
+
+  y.convertToBuffer(y_,number_motors);
+}

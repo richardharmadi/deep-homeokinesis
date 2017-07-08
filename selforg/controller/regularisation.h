@@ -37,6 +37,11 @@ double inline g(double z)
   return tanh(z);
 };
 
+double inline ginv(double z)
+{
+  return atanh(z);
+}
+
 /// first dervative
 double inline g_s(double z)
 {

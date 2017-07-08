@@ -2,7 +2,6 @@
 #define __STACKINVERTMOTORNSTEP_H
 
 #include "invertmotornstep.h"
-#include "nstepwrapper.h"
 #include <vector>
 
 using namespace std;
@@ -13,20 +12,20 @@ using namespace std;
 class StackInvertMotorNStep : public InvertMotorController, public Teachable{
 
 public:
-  vector<NStepWrapper> controllers; // vector of controller that will be stacked
+  vector<InvertMotorNStep> controllers; // vector of controller that will be stacked
 
   StackInvertMotorNStep(int buffersize, int nlayers);
 
   virtual void init(int sensornumber, int motornumber, RandGen* randGen = 0);
 
-  virtual void addLayer(NStepWrapper cont);
+  virtual void addLayer(InvertMotorNStep cont);
   
   virtual ~StackInvertMotorNStep();
 
   /// returns the number of sensors the controller was initialised with or 0 if not initialised
-  virtual int getSensorNumber() const { return number_sensors; }
+  virtual int getSensorNumber() const { return number_sensors; };
   /// returns the mumber of motors the controller was initialised with or 0 if not initialised
-  virtual int getMotorNumber() const  { return number_motors; }
+  virtual int getMotorNumber() const  { return number_motors; };
 
   /// performs one step (includes learning).
   /// Calulates motor commands from sensor inputs.
@@ -44,11 +43,23 @@ public:
   //**** New Stack functions ********//
   //matrix::Matrix& getC(int layernumber);
   //matrix::Matrix& getA(int layernumber);
-  //virtual matrix::Matrix getPredictionFromLayer(int layernumber);
+  virtual vector<sensor> getPredInputFromLayer(int layernumber);
+  virtual vector<motor> getInvOutputFromLayer(int layernumber);
+  virtual vector<sensor> getInvInputFromLayer(int layernumber);
+  virtual int getNLayer() const { return actual_nlayer; };
 
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;
+
+private:
+  matrix::Matrix arrSensor;
+  matrix::Matrix arrMotor;
+  int actual_nlayer = 0;
+  vector<vector<sensor>>pred_x;
+  vector<vector<motor>>inv_y;
+  vector<vector<sensor>>inv_x; // reconstructed input starting from first layer
+  vector<vector<motor>>ynext; // output starting from the second layer
 };
 
 #endif
