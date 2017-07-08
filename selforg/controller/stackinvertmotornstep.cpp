@@ -93,3 +93,25 @@ motor* StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
 sensor* StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
   return inv_x[layernumber];
 }
+
+
+bool StackInvertMotorNStep::store(FILE* f) const
+{
+  // save matrix values
+  pred_x.store(f);
+  inv_y.store(f);
+  inv_x.store(f);
+  Configurable::print(f,0);
+  return true;
+}
+
+bool StackInvertMotorNStep::restore(FILE* f)
+{
+  // save matrix values
+  pred_x.restore(f);
+  inv_y.restore(f);
+  inv_x.restore(f);
+  Configurable::parse(f);
+  t=0; // set time to zero to ensure proper filling of buffers
+  return true;
+}

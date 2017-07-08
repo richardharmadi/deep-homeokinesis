@@ -9,7 +9,7 @@ using namespace std;
  * class for robot controller that uses the georg's invertmotornstep network
  * (deep networks)
  */
-class StackInvertMotorNStep : public InvertMotorController, public Teachable{
+class StackInvertMotorNStep : public InvertMotorController{
 
 public:
   vector<InvertMotorNStep> controllers; // vector of controller that will be stacked
@@ -39,6 +39,11 @@ public:
   //virtual std::list<ILayer> getStructuralLayers() const;
   //virtual std::list<IConnection> getStructuralConnections() const;
 
+  /**** STOREABLE ****/
+  /** stores the controller values to a given file. */
+  virtual bool store(FILE* f) const;
+  /** loads the controller values from a given file. */
+  virtual bool restore(FILE* f);
 
   //**** New Stack functions ********//
   //matrix::Matrix& getC(int layernumber);
@@ -53,8 +58,6 @@ protected:
   unsigned short number_motors;
 
 private:
-  matrix::Matrix arrSensor;
-  matrix::Matrix arrMotor;
   int actual_nlayer = 0;
   vector<sensor*>pred_x;
   vector<motor*>inv_y;
