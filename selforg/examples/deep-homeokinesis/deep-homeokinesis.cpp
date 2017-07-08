@@ -27,10 +27,13 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 int main(){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
-  InvertMotorNStep controller0,controller1,controller2; // invertmotornstep object
-  main_controller->addLayer(controller0);
-  main_controller->addLayer(controller1);
-  main_controller->addLayer(controller2);
+  InvertMotorNStep* controller0 = new InvertMotorNStep();
+  InvertMotorNStep* controller1 = new InvertMotorNStep();
+  InvertMotorNStep* controller2 = new InvertMotorNStep();
+  //InvertMotorNStep controller0,controller1,controller2; // invertmotornstep object
+  main_controller->addLayer(*controller0);
+  main_controller->addLayer(*controller1);
+  main_controller->addLayer(*controller2);
   main_controller->init(2,2); // initialise with 2 motors and 2 sensors
 
   //controller->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
@@ -39,11 +42,20 @@ int main(){
   // sensor and motor arrays (doubles*)
   double sensors[SNumber];
   double motors[MNumber];
+
+  double sensor1[SNumber];
+  double motor1[MNumber];
+
+  double sensor2[SNumber];
+  double motor2[MNumber];
+
+  double sensor3[SNumber];
+  double motor3[MNumber];
   //double buffersensor[SNumber];// temp vector of inverted input
   //double buffermotor[MNumber]; // temp vector of inverted output
 
-  vector<double>& nextsensor;
-  vector<double>& nextmotor;
+  //vector<double> nextsensor;
+  //vector<double> nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
@@ -65,20 +77,30 @@ int main(){
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
+    /*
     for(int j=0;j<main_controller->getNLayer();j++){
       nextsensor.push_back(main_controller->getInvInputFromLayer(j));
       nextmotor.push_back(main_controller->getInvOutputFromLayer(j));
     }
+    */
+    sensor1 = main_controller->getInvInputFromLayer(0);
+    motor1 = main_controller->getInvOutputFromLayer(0);
 
-    cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-    cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
+    sensor2 = main_controller->getInvInputFromLayer(1);
+    motor2 = main_controller->getInvOutputFromLayer(1);
 
-    cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
-    cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
+    sensor3 = main_controller->getInvInputFromLayer(2);
+    motor3 = main_controller->getInvOutputFromLayer(2);
+
+    cout << i << " Sensor X1: " << sensor1[0] << ", " << sensor1[1];
+    cout << i << " Motor Y1: " << motor1[0] << ", " << motor1[1];
+
+    cout << i << " Sensor X2: " << sensor2[0] << ", " << sensor2[1];
+    cout << i << " Motor Y2: " << motor2[0] << ", " << motor2[1];
 
 
-    cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1];
-    cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1];
+    cout << i << " Sensor X3: " << sensor3[0] << ", " << sensor3[1];
+    cout << i << " Motor Y3: " << motor3[0] << ", " << motor3[1];
   }
   delete main_controller;
   delete controller0;
