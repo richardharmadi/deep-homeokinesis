@@ -60,6 +60,11 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
     cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
 
+    pred_x.push_back(temp_pred_x);
+    inv_y.push_back(temp_inv_y);
+    inv_x.push_back(temp_inv_x);
+
+    cout << "X1 from vector :" << inv_x[0] << endl;
     /*
     for(int i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
