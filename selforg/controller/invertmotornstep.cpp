@@ -290,6 +290,8 @@ void InvertMotorNStep::calcXsi(int delay)
   //  xsi = (x -  model(x_buffer, 1 , y));
   xpred = model(x_buffer,1,y); // new Richard 03.07.2017
   xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
+  cout << "xpred: " << xpred << endl;
+  cout << "xsi: " << xsi << endl;
   //  xsi_norm = matrixNorm1(xsi);
   xsi_norm = xsi.multTM().val(0,0);
 }

@@ -51,7 +51,6 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   // learning step layer 1
   controllers[0].step(x_,number_sensors,y_,number_motors);
   controllers[0].getPredSensorValue(temp_pred_x);
-  //cout << "Predicted: "  << temp_pred_x;
   /*
   for(int i=0;i<controllers.size();i++){
     controllers[i].getPredSensorValue(temp_pred_x);
