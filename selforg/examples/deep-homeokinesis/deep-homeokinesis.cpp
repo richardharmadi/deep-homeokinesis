@@ -28,8 +28,8 @@ int main(){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(50,3); // initialise with buffer size 50 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
-  //InvertMotorNStep* controller1 = new InvertMotorNStep();
-  InvertMotorNStep* controller2 = new InvertMotorNStep();
+  InvertMotorNStep* controller1 = new InvertMotorNStep();
+  //InvertMotorNStep* controller2 = new InvertMotorNStep();
   main_controller->addLayer(*controller0);
   main_controller->addLayer(*controller1);
   //main_controller->addLayer(*controller2);
