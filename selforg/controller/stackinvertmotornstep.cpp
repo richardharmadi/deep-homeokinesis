@@ -45,11 +45,13 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
 
   // buffer for previous layer output
   double temp_pred_x[number_sensors];
-  double temp_inv_y[number_motors];
-  double temp_inv_x[number_sensors]; 
-  double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
+  //double temp_inv_y[number_motors];
+  //double temp_inv_x[number_sensors]; 
+  //double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
   // learning step layer 1
   controllers[0].step(x_,number_sensors,y_,number_motors);
+  controllers[0].getPredSensorValue(temp_pred_x);
+  cout << 'Predicted: '  << temp_pred_x;
   /*
   for(int i=0;i<controllers.size();i++){
     controllers[i].getPredSensorValue(temp_pred_x);
