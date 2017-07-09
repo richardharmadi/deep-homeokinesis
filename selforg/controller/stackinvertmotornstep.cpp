@@ -84,7 +84,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
       //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
       //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
-      /*
+      
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
@@ -98,7 +98,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         inv_x[i] = vector_temp_inv_x;
       }
       //cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-      
+      /*
       controllers[i+1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
       vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
       if(ynext.size()==i){
