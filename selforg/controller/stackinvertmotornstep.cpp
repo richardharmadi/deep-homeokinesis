@@ -51,7 +51,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
   // learning step layer 1
   controllers[0].step(x_,number_sensors,y_,number_motors);
-
+  controllers[0].getStepCounter();
   if (controllers[0].getStepCounter()>buffersize){
     controllers[0].getPredSensorValue(temp_pred_x);
     controllers[0].getInvMotorValue(temp_inv_y);
