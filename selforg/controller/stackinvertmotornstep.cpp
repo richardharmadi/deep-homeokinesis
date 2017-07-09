@@ -8,8 +8,9 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
     : InvertMotorController(buffersize, "StackInvertMotorNStep", "$Id$")
 {
   nlayers = nlayers; // only used for memory reservation
-  buffersize = buffersize;
+  buffer = buffersize;
   cout << "BUFFER SIZE: " << buffersize;
+  cout << "buffer: " << buffer;
   controllers.reserve(nlayers); // memory reserve
 };
 

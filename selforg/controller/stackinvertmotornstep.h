@@ -59,7 +59,7 @@ protected:
 
 private:
   int actual_nlayer = 0;
-  int buffersize ;
+  int buffer;
   vector<vector<sensor>>pred_x;
   vector<vector<motor>>inv_y;
   vector<vector<sensor>>inv_x; // reconstructed input starting from first layer
