@@ -118,7 +118,7 @@ int main(){
   }
   delete main_controller;
   delete controller0;
-  delete controller1;
-  delete controller2;
+  //delete controller1;
+  //delete controller2;
   return 0;
 }
