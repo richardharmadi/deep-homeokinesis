@@ -61,7 +61,7 @@ int main(){
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
   // the robot is here respresented by the function myrobot
-  for(int i=0; i < 10; i++){
+  for(int i=0; i < 20; i++){
     // call robot with motors and receive sensors 
     myrobot(sensors, SNumber, motors, MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
