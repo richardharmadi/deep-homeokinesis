@@ -26,7 +26,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 
 int main(){
 
-  StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
+  StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(50,3); // initialise with buffer size 10 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
   //InvertMotorNStep* controller1 = new InvertMotorNStep();
   //InvertMotorNStep* controller2 = new InvertMotorNStep();
@@ -61,7 +61,7 @@ int main(){
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
   // the robot is here respresented by the function myrobot
-  for(int i=0; i < 20; i++){
+  for(int i=0; i < 100; i++){
     // call robot with motors and receive sensors 
     myrobot(sensors, SNumber, motors, MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
