@@ -68,8 +68,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       inv_x.push_back(vector_temp_inv_x);
     }else{
       pred_x[0] = vector_temp_pred_x;
-      inv_y[0] = vector_temp_pred_y;
-      inv_x[0] = vector_temp_inv_y;
+      inv_y[0] = vector_temp_inv_y;
+      inv_x[0] = vector_temp_inv_x;
     }
     cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
     /*
