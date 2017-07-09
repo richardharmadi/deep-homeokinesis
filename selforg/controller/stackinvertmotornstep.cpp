@@ -48,45 +48,41 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_pred_x[number_sensors];
   double temp_inv_y[number_motors];
   double temp_inv_x[number_sensors]; 
-  double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
   // learning step layer 1
   controllers[0].step(x_,number_sensors,y_,number_motors);
-  if (controllers[0].getStepCounter()>buffer){
-    controllers[0].getPredSensorValue(temp_pred_x);
-    controllers[0].getInvMotorValue(temp_inv_y);
-    controllers[0].getInvSensorValue(temp_inv_x);
-    cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
-    cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
-    cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
+  //copy(begin(y_), end(y_), begin(ynext_buffer)); // copy motor output to ynext buffer
 
-    vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
-    vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
-    vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-    if(pred_x.empty() && inv_y.empty() && inv_x.empty()){
-      pred_x.push_back(vector_temp_pred_x);
-      inv_y.push_back(vector_temp_inv_y);
-      inv_x.push_back(vector_temp_inv_x);
-    }else{
-      pred_x[0] = vector_temp_pred_x;
-      inv_y[0] = vector_temp_inv_y;
-      inv_x[0] = vector_temp_inv_x;
-    }
-    cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-    /*
+  if (controllers[0].getStepCounter()>buffer){
     for(int i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
       controllers[i].getInvMotorValue(temp_inv_y);
       controllers[i].getInvSensorValue(temp_inv_x);
 
-      pred_x.push_back(temp_pred_x);
-      inv_y.push_back(temp_inv_y);
-      inv_x.push_back(temp_inv_x);
+      //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
+      //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
+      //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
 
+      vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
+      vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
+      vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
+      if((pred_x.size()==i) && (inv_y.size()==i) && (inv_x.size()==i)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+        pred_x.push_back(vector_temp_pred_x); // we add it to the vector
+        inv_y.push_back(vector_temp_inv_y);
+        inv_x.push_back(vector_temp_inv_x);
+      }else{
+        pred_x[i] = vector_temp_pred_x; // if its already there, we update the value for each learning step
+        inv_y[i] = vector_temp_inv_y;
+        inv_x[i] = vector_temp_inv_x;
+      }
+      //cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
       controllers[i+1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
       vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
-      ynext.push_back(vector_ynext); // motor output start from second layer
+      if(ynext.size()==i){
+        ynext.push_back(vector_ynext); // motor output start from second layer
+      }else{
+        ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
       }
-    */
+    }
   }else{
     if(controllers.size()>1){
       for(int i=0;i<controllers.size();i++){
@@ -119,6 +115,9 @@ vector<sensor> StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
   return inv_x[layernumber];
 }
 
+vector<motor> StackInvertMotorNStep::getAvgOutputFromLayer(int layernumber){
+  return ynext[layernumber];
+}
 
 bool StackInvertMotorNStep::store(FILE* f) const
 {

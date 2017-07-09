@@ -51,6 +51,7 @@ public:
   virtual vector<sensor> getPredInputFromLayer(int layernumber);
   virtual vector<motor> getInvOutputFromLayer(int layernumber);
   virtual vector<sensor> getInvInputFromLayer(int layernumber);
+  virtual vector<motor> getAvgOutputFromLayer(int layernumber);
   virtual int getNLayer() const { return actual_nlayer; };
 
 protected:
@@ -60,6 +61,7 @@ protected:
 private:
   int actual_nlayer = 0;
   int buffer;
+  double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
   vector<vector<sensor>>pred_x;
   vector<vector<motor>>inv_y;
   vector<vector<sensor>>inv_x; // reconstructed input starting from first layer

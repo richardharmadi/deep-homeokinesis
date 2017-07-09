@@ -31,7 +31,7 @@ int main(){
   //InvertMotorNStep* controller1 = new InvertMotorNStep();
   //InvertMotorNStep* controller2 = new InvertMotorNStep();
   main_controller->addLayer(*controller0);
-  //main_controller->addLayer(*controller1);
+  main_controller->addLayer(*controller1);
   //main_controller->addLayer(*controller2);
   main_controller->init(2,2); // initialise with 2 motors and 2 sensors
 
@@ -55,8 +55,8 @@ int main(){
   //double buffersensor[SNumber];// temp vector of inverted input
   //double buffermotor[MNumber]; // temp vector of inverted output
 
-  //vector<vector<sensor>> nextsensor;
-  //vector<vector<motor>> nextmotor;
+  vector<vector<sensor>> nextsensor;
+  vector<vector<motor>> nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
@@ -73,21 +73,19 @@ int main(){
     cout << i << " C00: " << v[4] << ", " <<" C01: " << v[5] << ", " <<
       " C10: " << v[6] << ", " <<" C11: " << v[7]  << endl;
     */
-
+ 
     // call controller with sensors and receive motors (both dimension 2)    
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
-    /*
     for(int j=0;j<main_controller->getNLayer();j++){
       nextsensor.push_back(main_controller->getInvInputFromLayer(j));
-      nextmotor.push_back(main_controller->getInvOutputFromLayer(j));
+      nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
     }
-    */
+    
+    cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+    cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     /*
-      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-      cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
-
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
       cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
 
@@ -129,7 +127,7 @@ int main(){
   }
   delete main_controller;
   delete controller0;
-  //delete controller1;
+  delete controller1;
   //delete controller2;
   return 0;
 }
