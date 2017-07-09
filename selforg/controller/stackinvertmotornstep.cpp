@@ -44,7 +44,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
 {
 
   // buffer for previous layer output
-  //double temp_pred_x[number_sensors];
+  double temp_pred_x[number_sensors];
   //double temp_inv_y[number_motors];
   //double temp_inv_x[number_sensors]; 
   //double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
