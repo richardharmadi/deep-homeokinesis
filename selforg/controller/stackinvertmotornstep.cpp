@@ -112,7 +112,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       //for(size_t i=0;i<controllers.size();i++){
       //controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
       //}
-    }
+    //}
   }
 }
 

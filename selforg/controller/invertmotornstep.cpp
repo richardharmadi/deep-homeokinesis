@@ -773,7 +773,7 @@ void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, 
 
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
-
+  /*
   Matrix x(number_sensors,1,x_);
   putInBuffer(x_buffer,x);
   x_smooth = calculateSmoothValues(x_buffer,t<s4avg?1:int(max(1.0,s4avg)));
@@ -796,5 +796,5 @@ void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sen
 
   putInBuffer(y_buffer,y);
 
-  y.convertToBuffer(y_,number_motors);
+  y.convertToBuffer(y_,number_motors);*/
 }
