@@ -4,10 +4,10 @@
 using namespace matrix;
 using namespace std;
 
-StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int layers)
+StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
     : InvertMotorController(buffersize, "StackInvertMotorNStep", "$Id$")
 {
-  nlayers = layers; // only used for memory reservation
+  // layers only used for memory reservation
   buffer = buffersize;
   controllers.reserve(nlayers); // memory reserve
 };
