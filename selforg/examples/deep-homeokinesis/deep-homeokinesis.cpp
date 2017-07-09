@@ -28,12 +28,11 @@ int main(){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(10,3); // initialise with buffer size 10 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
-  InvertMotorNStep* controller1 = new InvertMotorNStep();
-  InvertMotorNStep* controller2 = new InvertMotorNStep();
-  //InvertMotorNStep controller0,controller1,controller2; // invertmotornstep object
+  //InvertMotorNStep* controller1 = new InvertMotorNStep();
+  //InvertMotorNStep* controller2 = new InvertMotorNStep();
   main_controller->addLayer(*controller0);
-  main_controller->addLayer(*controller1);
-  main_controller->addLayer(*controller2);
+  //main_controller->addLayer(*controller1);
+  //main_controller->addLayer(*controller2);
   main_controller->init(2,2); // initialise with 2 motors and 2 sensors
 
   //controller->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
