@@ -9,6 +9,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
 {
   nlayers = nlayers; // only used for memory reservation
   buffersize = buffersize;
+  cout << "BUFFER SIZE: " << buffersize;
   controllers.reserve(nlayers); // memory reserve
 };
 
@@ -85,12 +86,9 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }
     */
   }else{
-    cout << "masuk ke else" << endl;
-    /*
     for(int i=0;i<controllers.size();i++){
       controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
     }
-    */
   }
 }
 
