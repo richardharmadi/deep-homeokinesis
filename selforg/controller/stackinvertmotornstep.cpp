@@ -53,7 +53,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   //copy(begin(y_), end(y_), begin(ynext_buffer)); // copy motor output to ynext buffer
 
   if (controllers[0].getStepCounter()>buffer){
-    for(int i=0;i<controllers.size();i++){
+    for(size_t i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
       controllers[i].getInvMotorValue(temp_inv_y);
       controllers[i].getInvSensorValue(temp_inv_x);
@@ -85,7 +85,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     }
   }else{
     if(controllers.size()>1){
-      for(int i=0;i<controllers.size();i++){
+      for(size_t i=0;i<controllers.size();i++){
         controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
       }
     }
