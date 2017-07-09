@@ -53,7 +53,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   //copy(begin(y_), end(y_), begin(ynext_buffer)); // copy motor output to ynext buffer
 
   if (controllers[0].getStepCounter()>buffer){
-      controllers[0].getPredSensorValue(temp_pred_x);
+    /*
+    controllers[0].getPredSensorValue(temp_pred_x);
       controllers[0].getInvMotorValue(temp_inv_y);
       controllers[0].getInvSensorValue(temp_inv_x);
 
@@ -74,7 +75,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         inv_x[0] = vector_temp_inv_x;
       }
       cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-    /*
+    */
     for(size_t i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
       controllers[i].getInvMotorValue(temp_inv_y);
@@ -104,7 +105,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }else{
         ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
       }
-    }*/
+    }
   }else{
     if(controllers.size()>1){
       for(size_t i=0;i<controllers.size();i++){
