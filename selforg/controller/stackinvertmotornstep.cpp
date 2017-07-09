@@ -54,7 +54,13 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
 
   if (controllers[0].getStepCounter()>buffersize){
     controllers[0].getPredSensorValue(temp_pred_x);
-    //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
+    controllers[0].getInvMotorValue(temp_inv_y);
+    controllers[0].getInvSensorValue(temp_inv_x);
+    cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
+    cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
+    cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
+
+    /*
     for(int i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
       controllers[i].getInvMotorValue(temp_inv_y);
@@ -67,6 +73,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       controllers[i+1].stepNextLayer(inv_x[i],number_sensors,ynext_buffer,number_motors,inv_y[i]);
       ynext.push_back(ynext_buffer); // motor output start from second layer
       }
+    */
   }else{ 
     for(int i=0;i<controllers.size();i++){
       controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
