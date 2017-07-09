@@ -60,11 +60,14 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
     cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
 
-    pred_x.push_back(temp_pred_x);
-    inv_y.push_back(temp_inv_y);
-    inv_x.push_back(temp_inv_x);
+    vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
+    vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
+    vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor)); 
+    pred_x.push_back(vector_temp_pred_x);
+    inv_y.push_back(vector_temp_inv_y);
+    inv_x.push_back(vector_temp_inv_x);
 
-    cout << "X1 from vector :" << inv_x[0] << endl;
+    cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
     /*
     for(int i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);
@@ -75,8 +78,9 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       inv_y.push_back(temp_inv_y);
       inv_x.push_back(temp_inv_x);
 
-      controllers[i+1].stepNextLayer(inv_x[i],number_sensors,ynext_buffer,number_motors,inv_y[i]);
-      ynext.push_back(ynext_buffer); // motor output start from second layer
+      controllers[i+1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
+      vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
+      ynext.push_back(vector_ynext); // motor output start from second layer
       }
     */
   }else{ 
@@ -97,15 +101,15 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   */
 }
 
-sensor* StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
+vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
   return pred_x[layernumber]; 
 }
 
-motor* StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
+vector<motor> StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
   return inv_y[layernumber];
 }
 
-sensor* StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
+vector<sensor> StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
   return inv_x[layernumber];
 }
 

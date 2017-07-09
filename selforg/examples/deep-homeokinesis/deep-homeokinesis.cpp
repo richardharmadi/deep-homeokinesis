@@ -55,8 +55,8 @@ int main(){
   //double buffersensor[SNumber];// temp vector of inverted input
   //double buffermotor[MNumber]; // temp vector of inverted output
 
-  //vector<double> nextsensor;
-  //vector<double> nextmotor;
+  //vector<vector<sensor>> nextsensor;
+  //vector<vector<motor>> nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
 
@@ -84,6 +84,17 @@ int main(){
       nextmotor.push_back(main_controller->getInvOutputFromLayer(j));
     }
     */
+    /*
+      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+      cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
+
+      cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
+      cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
+
+
+      cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1];
+      cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1];
+    */
 
     /*
     sensor* sensor1 = main_controller->getInvInputFromLayer(0);
@@ -95,7 +106,7 @@ int main(){
     sensor* sensor3 = main_controller->getInvInputFromLayer(2);
     motor* motor3 = main_controller->getInvOutputFromLayer(2);
     */
-
+    
     /*
     cout << i << " Sensor X1: " << sensor1[0] << ", " << sensor1[1];
     cout << i << " Motor Y1: " << motor1[0] << ", " << motor1[1];
