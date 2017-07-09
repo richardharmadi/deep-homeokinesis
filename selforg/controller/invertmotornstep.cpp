@@ -743,6 +743,7 @@ void InvertMotorNStep::setReinforcement(double reinforcement)
 
 void InvertMotorNStep::getPredSensorValue(sensor* xpred_){
   xpred.convertToBuffer(xpred_,number_sensors);
+  cout << "input predicted: " << xpred << endl;
 }
 
 void InvertMotorNStep::getInvMotorValue(motor* yinv_){
