@@ -85,6 +85,8 @@ int main(){
       nextmotor.push_back(main_controller->getInvOutputFromLayer(j));
     }
     */
+
+    /*
     sensor* sensor1 = main_controller->getInvInputFromLayer(0);
     motor* motor1 = main_controller->getInvOutputFromLayer(0);
 
@@ -93,6 +95,7 @@ int main(){
 
     sensor* sensor3 = main_controller->getInvInputFromLayer(2);
     motor* motor3 = main_controller->getInvOutputFromLayer(2);
+    */
 
     /*
     cout << i << " Sensor X1: " << sensor1[0] << ", " << sensor1[1];
@@ -105,12 +108,14 @@ int main(){
     cout << i << " Sensor X3: " << sensor3[0] << ", " << sensor3[1];
     cout << i << " Motor Y3: " << motor3[0] << ", " << motor3[1];
     */
+    /*
     cout << i << " Sensor X1: " << *sensor1;
     cout << i << " Motor Y1: " << *motor1;
     cout << i << " Sensor X2: " << *sensor2;
     cout << i << " Motor Y2: " << *motor2;
     cout << i << " Sensor X3: " << *sensor3;
     cout << i << " Motor Y3 " << *motor3;
+    */
   }
   delete main_controller;
   delete controller0;
