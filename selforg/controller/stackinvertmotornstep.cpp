@@ -4,10 +4,10 @@
 using namespace matrix;
 using namespace std;
 
-StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
+StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int layers)
     : InvertMotorController(buffersize, "StackInvertMotorNStep", "$Id$")
 {
-  nlayers = nlayers; // only used for memory reservation
+  nlayers = layers; // only used for memory reservation
   buffer = buffersize;
   controllers.reserve(nlayers); // memory reserve
 };
@@ -61,11 +61,16 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
 
     vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
     vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
-    vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor)); 
-    pred_x.push_back(vector_temp_pred_x);
-    inv_y.push_back(vector_temp_inv_y);
-    inv_x.push_back(vector_temp_inv_x);
-
+    vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
+    if(pred_x.empty() && inv_y.empty() && inv_x.empty()){
+      pred_x.push_back(vector_temp_pred_x);
+      inv_y.push_back(vector_temp_inv_y);
+      inv_x.push_back(vector_temp_inv_x);
+    }else{
+      pred_x[0] = vector_temp_pred_x;
+      inv_y[0] = vector_temp_pred_y;
+      inv_x[0] = vector_temp_inv_y;
+    }
     cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
     /*
     for(int i=0;i<controllers.size();i++){
@@ -83,9 +88,10 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }
     */
   }else{
-    cout << "masuk ke else"<< endl;
-    for(int i=0;i<controllers.size();i++){
-      controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
+    if(controllers.size()>1){
+      for(int i=0;i<controllers.size();i++){
+        controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
+      }
     }
   }
 }
