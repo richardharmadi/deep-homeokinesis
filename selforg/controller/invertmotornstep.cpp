@@ -164,8 +164,10 @@ void InvertMotorNStep::step(const sensor* x_, int number_sensors,
                             motor* y_, int number_motors)
 {
   fillBuffersAndControl(x_, number_sensors, y_, number_motors);
+  cout << "test1" << endl;
   if(t>buffersize)
   {
+    cout << "test2" <<endl;
     int delay = max(int(s4delay)-1,0);
     calcXsi(delay);            // calculate the error (use delayed y values)
     calcEtaAndBufferIt(delay);
