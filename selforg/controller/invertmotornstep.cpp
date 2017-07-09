@@ -164,10 +164,8 @@ void InvertMotorNStep::step(const sensor* x_, int number_sensors,
                             motor* y_, int number_motors)
 {
   fillBuffersAndControl(x_, number_sensors, y_, number_motors);
-  cout << "test1" << endl;
   if(t>buffersize)
   {
-    cout << "test2" <<endl;
     int delay = max(int(s4delay)-1,0);
     calcXsi(delay);            // calculate the error (use delayed y values)
     calcEtaAndBufferIt(delay);
@@ -179,6 +177,7 @@ void InvertMotorNStep::step(const sensor* x_, int number_sensors,
   }
   // update step counter
   t++;
+  step_counter = t;
 
 //   // Georg: This a very special case. Should be removed! Make a copy to the precise simulation
   if (cfactor!=1)
@@ -205,6 +204,7 @@ void InvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   fillBuffersAndControl(x, number_sensors, y, number_motors);
   // update step counter
   t++;
+  step_counter = t;
 };
 
 void InvertMotorNStep::fillBuffersAndControl(const sensor* x_, int number_sensors,
@@ -292,8 +292,6 @@ void InvertMotorNStep::calcXsi(int delay)
   //  xsi = (x -  model(x_buffer, 1 , y));
   xpred = model(x_buffer,1,y); // new Richard 03.07.2017
   xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
-  cout << "xpred: " << xpred << endl;
-  cout << "xsi: " << xsi << endl;
   //  xsi_norm = matrixNorm1(xsi);
   xsi_norm = xsi.multTM().val(0,0);
 }
@@ -747,7 +745,6 @@ void InvertMotorNStep::setReinforcement(double reinforcement)
 
 void InvertMotorNStep::getPredSensorValue(sensor* xpred_){
   xpred.convertToBuffer(xpred_,number_sensors);
-  cout << "input predicted: " << xpred << endl;
 }
 
 void InvertMotorNStep::getInvMotorValue(motor* yinv_){

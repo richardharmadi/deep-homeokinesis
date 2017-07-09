@@ -8,6 +8,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
     : InvertMotorController(buffersize, "StackInvertMotorNStep", "$Id$")
 {
   nlayers = nlayers; // only used for memory reservation
+  buffersize = buffersize;
   controllers.reserve(nlayers); // memory reserve
 };
 
@@ -50,21 +51,29 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   //double ynext_buffer[number_motors]; // new output for next layer (averaged output from reconstructed and controller next layer)
   // learning step layer 1
   controllers[0].step(x_,number_sensors,y_,number_motors);
-  controllers[0].getPredSensorValue(temp_pred_x);
-  /*
-  for(int i=0;i<controllers.size();i++){
-    controllers[i].getPredSensorValue(temp_pred_x);
-    controllers[i].getInvMotorValue(temp_inv_y);
-    controllers[i].getInvSensorValue(temp_inv_x);
+  if (controllers[0].getStepCounter()>buffersize){
+    controllers[0].getPredSensorValue(temp_pred_x);
+    cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
+    /*
+      for(int i=0;i<controllers.size();i++){
+      controllers[i].getPredSensorValue(temp_pred_x);
+      controllers[i].getInvMotorValue(temp_inv_y);
+      controllers[i].getInvSensorValue(temp_inv_x);
 
-    pred_x.push_back(temp_pred_x);
-    inv_y.push_back(temp_inv_y);
-    inv_x.push_back(temp_inv_x);
+      pred_x.push_back(temp_pred_x);
+      inv_y.push_back(temp_inv_y);
+      inv_x.push_back(temp_inv_x);
 
-    controllers[i+1].stepNextLayer(inv_x[i],number_sensors,ynext_buffer,number_motors,inv_y[i]);
-    ynext.push_back(ynext_buffer); // motor output start from second layer
+      controllers[i+1].stepNextLayer(inv_x[i],number_sensors,ynext_buffer,number_motors,inv_y[i]);
+      ynext.push_back(ynext_buffer); // motor output start from second layer
+      }
+    */
+  }else{
+    /* 
+    for(int i=0;i<controllers.size();i++){
+      controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
+    */
   }
-  */
 }
 
 /// performs one step without learning. Calulates motor commands from sensor inputs.

@@ -161,6 +161,7 @@ public:
   matrix::Matrix& getC(){return C;};
 
   double getE() const {return v.multTM().val(0,0);}
+  int getStepCounter() {return step_counter;}
 
 protected:
   unsigned short number_sensors;
@@ -197,7 +198,7 @@ protected:
   double reinforcement; ///< reinforcement value (set via setReinforcement())
   double reinforcefactor; ///< reinforcement factor (set to 1 every step after learning)
   int t_rand; ///< initial random time to avoid syncronous management of all controllers
-
+  int step_counter;
   matrix::Matrix sensorweights; ///< sensor channel weight (each channel gets a certain importance)
 
   /** factor to teach for continuity: subsequent motor commands
