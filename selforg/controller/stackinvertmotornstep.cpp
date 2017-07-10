@@ -11,6 +11,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   // layers only used for memory reservation
   buffer = buffersize;
   controllers.reserve(nlayers); // memory reserve
+  is_step = false;
 };
 
 void StackInvertMotorNStep::addLayer (InvertMotorNStep* cont){
@@ -40,6 +41,7 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
     (*it)->init(number_sensors,number_motors,randGen);
   }
   ynext_buffer = new motor[number_motors];
+  is_step = false;
 }
 
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
@@ -65,7 +67,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-      if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+      //if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+      if(!is_step){
         pred_x.push_back(vector_temp_pred_x); // we add it to the vector
         inv_y.push_back(vector_temp_inv_y);
         inv_x.push_back(vector_temp_inv_x);
@@ -97,6 +100,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }
     }
   }
+  is_step = true;
 }
 
 /// performs one step without learning. Calulates motor commands from sensor inputs.
