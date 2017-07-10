@@ -41,19 +41,6 @@ int main(){
   double sensors[SNumber];
   double motors[MNumber];
 
-  /*
-  double sensor1[SNumber];
-  double motor1[MNumber];
-
-  double sensor2[SNumber];
-  double motor2[MNumber];
-
-  double sensor3[SNumber];
-  double motor3[MNumber];
-  */
-  //double buffersensor[SNumber];// temp vector of inverted input
-  //double buffermotor[MNumber]; // temp vector of inverted output
-
   vector<vector<sensor>> nextsensor;
   vector<vector<motor>> nextmotor;
 
@@ -77,15 +64,13 @@ int main(){
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
-    /*
     for(int j=0;j<main_controller->getNLayer();j++){
       nextsensor.push_back(main_controller->getInvInputFromLayer(j));
       nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
     }
-    */
     
-    //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-    //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
+    cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+    cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     /*
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
       cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
