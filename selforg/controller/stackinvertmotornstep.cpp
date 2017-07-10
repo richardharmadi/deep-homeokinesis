@@ -13,7 +13,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   controllers.reserve(nlayers); // memory reserve
 };
 
-void StackInvertMotorNStep::addLayer (InvertMotorNStep cont){
+void StackInvertMotorNStep::addLayer (InvertMotorNStep* cont){
     //cont = new InvertMotorNStep(); 
   controllers.push_back(cont);
   actual_nlayer+=1;
@@ -21,11 +21,11 @@ void StackInvertMotorNStep::addLayer (InvertMotorNStep cont){
 
 StackInvertMotorNStep::~StackInvertMotorNStep()
 {
-  InvertMotorNStep* ptr;
+  /*InvertMotorNStep* ptr;
   for(vector<InvertMotorNStep>::iterator it = controllers.begin(); it!= controllers.end();++it){
     ptr = &(*it);
-    //delete ptr;
-  }
+    delete ptr;
+    }*/
   controllers.clear();
 }
 
@@ -96,7 +96,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       cout << "else ynext" << endl;
       ynext[0] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
     }
-    
+    cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
     /*
     for(size_t i=0;i<controllers.size();i++){
       controllers[i].getPredSensorValue(temp_pred_x);

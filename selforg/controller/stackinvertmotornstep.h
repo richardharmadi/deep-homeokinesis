@@ -12,7 +12,7 @@ using namespace std;
 class StackInvertMotorNStep : public InvertMotorController{
 
 public:
-  vector<InvertMotorNStep> controllers; // vector of controller that will be stacked
+  vector<InvertMotorNStep*> controllers; // vector of controller that will be stacked
 
   StackInvertMotorNStep(int buffersize, int nlayers);
 

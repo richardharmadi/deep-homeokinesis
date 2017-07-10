@@ -29,8 +29,8 @@ int main(){
   InvertMotorNStep* controller0 = new InvertMotorNStep();
   InvertMotorNStep* controller1 = new InvertMotorNStep();
   //InvertMotorNStep* controller2 = new InvertMotorNStep();
-  main_controller->addLayer(*controller0);
-  main_controller->addLayer(*controller1);
+  main_controller->addLayer(controller0);
+  main_controller->addLayer(controller1);
   //main_controller->addLayer(*controller2);
   main_controller->init(2,2); // initialise with 2 motors and 2 sensors
 
