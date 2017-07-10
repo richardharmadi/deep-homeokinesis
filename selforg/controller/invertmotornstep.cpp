@@ -761,19 +761,18 @@ void InvertMotorNStep::getInvSensorValue(sensor* xinv_){
 
 void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   fillBuffersAndControlNextLayer(x_,number_sensors,y_,number_motors,yinv);
-  /*if (step_counter>buffersize){
+  if (step_counter>buffersize){
     int delay = max(int(s4delay)-1,0);
     calcXsi(delay);
     calcEtaAndBufferIt(delay);
     learnController(delay);
     learnModel(delay);
   }
-  step_counter++;*/
+  step_counter++;
 };
 
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
-  /*
   Matrix x(number_sensors,1,x_);
   putInBuffer(x_buffer,x);
   x_smooth = calculateSmoothValues(x_buffer,t<s4avg?1:int(max(1.0,s4avg)));
@@ -796,5 +795,5 @@ void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sen
 
   putInBuffer(y_buffer,y);
 
-  y.convertToBuffer(y_,number_motors);*/
+  y.convertToBuffer(y_,number_motors);
 }
