@@ -69,11 +69,12 @@ int main(){
       for(int j=0;j<main_controller->getNLayer();j++){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
+        cout << "iterasi " << j << endl;
         nextsensor.push_back(main_controller->getInvInputFromLayer(j));
-        nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+        //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
       }
-      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-      cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
+      //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+      //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     }
     
     /*
