@@ -52,14 +52,14 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_inv_y[number_motors];
   double temp_inv_x[number_sensors]; 
   // learning step layer 1
-  controllers[0].step(x_,number_sensors,y_,number_motors);
+  controllers[0]->step(x_,number_sensors,y_,number_motors);
   //copy(begin(y_), end(y_), begin(ynext_buffer)); // copy motor output to ynext buffer
 
-  if (controllers[0].getStepCounter()>buffer){
+  if (controllers[0]->getStepCounter()>buffer){
     cout << "masuk if" << endl;
-    controllers[0].getPredSensorValue(temp_pred_x);
-    controllers[0].getInvMotorValue(temp_inv_y);
-    controllers[0].getInvSensorValue(temp_inv_x);
+    controllers[0]->getPredSensorValue(temp_pred_x);
+    controllers[0]->getInvMotorValue(temp_inv_y);
+    controllers[0]->getInvSensorValue(temp_inv_x);
 
     //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
     //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
@@ -78,7 +78,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       inv_x[0] = vector_temp_inv_x;
     }
     cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-    controllers[1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
+    controllers[1]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
     size_t sapakek = sizeof(ynext_buffer)/sizeof(motor);
     cout << "size "<< sapakek << endl;
     //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
@@ -133,7 +133,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     cout << "masuk else" << endl;
     if(controllers.size()>1){
       for(size_t i=1;i<controllers.size();i++){
-        controllers[i].stepNoLearning(x_,number_sensors,y_,number_motors);
+        controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
       }
     }
   }
