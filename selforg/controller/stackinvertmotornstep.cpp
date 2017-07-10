@@ -44,9 +44,8 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
 
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
 void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
-                            motor* y_, int number_motors)
+                                 motor* y_, int number_motors)
 {
-
   // buffer for previous layer output
   double temp_pred_x[number_sensors];
   double temp_inv_y[number_motors];
@@ -90,10 +89,11 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
       }
       //cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
-  }else{
-    if(controllers.size()>1){
-      for(size_t i=1;i<controllers.size();i++){
-        controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
+    }else{
+      if(controllers.size()>1){
+        for(size_t i=1;i<controllers.size();i++){
+          controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
+        }
       }
     }
   }
