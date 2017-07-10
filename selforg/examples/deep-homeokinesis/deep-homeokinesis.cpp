@@ -63,12 +63,14 @@ int main(){
     // call controller with sensors and receive motors (both dimension 2)    
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
-    /*
+
     for(int j=0;j<main_controller->getNLayer();j++){
-      nextsensor.push_back(main_controller->getInvInputFromLayer(j));
-      nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+      main_controller->getInvInputFromLayer(j);
+      main_controller->getAvgOutputFromLayer(j);
+      //nextsensor.push_back(main_controller->getInvInputFromLayer(j));
+      //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
     }
-    */
+    
     //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
     //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     /*
