@@ -61,7 +61,6 @@ protected:
 private:
   int actual_nlayer = 0;
   int buffer;
-  bool is_step; // flag for first step
   motor* ynext_buffer; // new output for next layer (averaged output from reconstructed and controller next layer)
   vector<vector<sensor>>pred_x;
   vector<vector<motor>>inv_y;
