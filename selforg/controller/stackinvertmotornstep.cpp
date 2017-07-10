@@ -79,9 +79,11 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
     
     vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
-    if(ynext.size()==0){
+    if(!ynext.size()){
+      cout << "if ynext" << endl;
       ynext.push_back(vector_ynext); // motor output start from second layer
     }else{
+      cout << "else ynext" << endl;
       ynext[0] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
     }
     controllers[1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
