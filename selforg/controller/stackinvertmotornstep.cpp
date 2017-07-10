@@ -39,6 +39,7 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
   for(vector<InvertMotorNStep>::iterator it = controllers.begin(); it!= controllers.end();++it){
     it->init(number_sensors,number_motors,randGen);
   }
+  ynext_buffer = new double[number_motors];
 }
 
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
