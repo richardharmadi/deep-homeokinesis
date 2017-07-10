@@ -18,7 +18,7 @@ public:
 
   virtual void init(int sensornumber, int motornumber, RandGen* randGen = 0);
 
-  virtual void addLayer(InvertMotorNStep cont);
+  virtual void addLayer(InvertMotorNStep* cont);
   
   virtual ~StackInvertMotorNStep();
 

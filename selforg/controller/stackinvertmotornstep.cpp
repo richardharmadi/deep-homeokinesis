@@ -36,8 +36,8 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
   if(!randGen) randGen = new RandGen(); // this gives a small memory leak
   number_motors  = motornumber;
   number_sensors = sensornumber;
-  for(vector<InvertMotorNStep>::iterator it = controllers.begin(); it!= controllers.end();++it){
-    it->init(number_sensors,number_motors,randGen);
+  for(vector<InvertMotorNStep*>::iterator it = controllers.begin(); it!= controllers.end();++it){
+    (*it)->init(number_sensors,number_motors,randGen);
   }
   ynext_buffer = new motor[number_motors];
 }
@@ -53,64 +53,20 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_inv_x[number_sensors]; 
   // learning step layer 1
   controllers[0]->step(x_,number_sensors,y_,number_motors);
-  //copy(begin(y_), end(y_), begin(ynext_buffer)); // copy motor output to ynext buffer
-
-  if (controllers[0]->getStepCounter()>buffer){
-    cout << "masuk if" << endl;
-    controllers[0]->getPredSensorValue(temp_pred_x);
-    controllers[0]->getInvMotorValue(temp_inv_y);
-    controllers[0]->getInvSensorValue(temp_inv_x);
-
-    //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
-    //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
-    //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
-
-    vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
-    vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
-    vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-    if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
-      pred_x.push_back(vector_temp_pred_x); // we add it to the vector
-      inv_y.push_back(vector_temp_inv_y);
-      inv_x.push_back(vector_temp_inv_x);
-    }else{
-      pred_x[0] = vector_temp_pred_x; // if its already there, we update the value for each learning step
-      inv_y[0] = vector_temp_inv_y;
-      inv_x[0] = vector_temp_inv_x;
-    }
-    cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-    controllers[1]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
-    size_t sapakek = sizeof(ynext_buffer)/sizeof(motor);
-    cout << "size "<< sapakek << endl;
-    //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
-
-    vector<double> vector_ynext;
-    for(int j=0;j<number_motors;j++){
-      cout  << "iterasi ke " << j << endl;
-      vector_ynext.push_back(ynext_buffer[j]);
-    }
-
-    if(!ynext.size()){
-      cout << "if ynext" << endl;
-      ynext.push_back(vector_ynext); // motor output start from second layer
-    }else{
-      cout << "else ynext" << endl;
-      ynext[0] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
-    }
-    cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
-    /*
-    for(size_t i=0;i<controllers.size();i++){
-      controllers[i].getPredSensorValue(temp_pred_x);
-      controllers[i].getInvMotorValue(temp_inv_y);
-      controllers[i].getInvSensorValue(temp_inv_x);
+  for(size_t i=0;i<controllers.size()-1;i++){
+    if (controllers[i]->getStepCounter()>buffer){
+      controllers[i]->getPredSensorValue(temp_pred_x);
+      controllers[i]->getInvMotorValue(temp_inv_y);
+      controllers[i]->getInvSensorValue(temp_inv_x);
 
       //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
       //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
       //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
-      
+
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-      if((pred_x.size()==i) && (inv_y.size()==i) && (inv_x.size()==i)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+      if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
         pred_x.push_back(vector_temp_pred_x); // we add it to the vector
         inv_y.push_back(vector_temp_inv_y);
         inv_x.push_back(vector_temp_inv_x);
@@ -120,17 +76,22 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         inv_x[i] = vector_temp_inv_x;
       }
       //cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-      
-      controllers[i+1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
-      vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
-      if(ynext.size()==i){
+      controllers[i+1]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
+      //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
+
+      vector<double> vector_ynext;
+      for(int j=0;j<number_motors;j++){
+        vector_ynext.push_back(ynext_buffer[j]);
+      }
+
+      if(!ynext.size()){
         ynext.push_back(vector_ynext); // motor output start from second layer
       }else{
         ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
       }
-      }*/
+      //cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
+    }
   }else{
-    cout << "masuk else" << endl;
     if(controllers.size()>1){
       for(size_t i=1;i<controllers.size();i++){
         controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
