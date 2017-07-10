@@ -94,7 +94,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }
       cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
     }else{
-      if(controllers.size()>1){
+      if(i!=0){
         controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
       }
     }
