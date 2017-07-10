@@ -119,13 +119,11 @@ vector<motor> StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
 }
 
 vector<sensor> StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
-  //return inv_x[layernumber];
-  cout << "halo" << endl;
+  return inv_x[layernumber];
 }
 
 vector<motor> StackInvertMotorNStep::getAvgOutputFromLayer(int layernumber){
-  //return ynext[layernumber];
-  cout << "yyyooo" << endl;
+  return ynext[layernumber];
 }
 
 bool StackInvertMotorNStep::store(FILE* f) const

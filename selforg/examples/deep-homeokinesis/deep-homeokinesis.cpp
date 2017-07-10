@@ -9,6 +9,7 @@ using namespace std;
 
 const int MNumber = 2;
 const int SNumber = 2;
+const int buffersize = 50;
 
 /** The robot control should go here
     @param sensors list of sensor values (to be written) (doubles)
@@ -25,7 +26,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 }
 
 int main(){
-  StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(50,3); // initialise with buffer size 50 and 2 layers
+  StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,3); // initialise with buffer size 50 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
   InvertMotorNStep* controller1 = new InvertMotorNStep();
   //InvertMotorNStep* controller2 = new InvertMotorNStep();
@@ -64,15 +65,17 @@ int main(){
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
-    for(int j=0;j<main_controller->getNLayer();j++){
-      main_controller->getInvInputFromLayer(j);
-      main_controller->getAvgOutputFromLayer(j);
-      //nextsensor.push_back(main_controller->getInvInputFromLayer(j));
-      //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+    if(i>=buffersize){
+      for(int j=0;j<main_controller->getNLayer();j++){
+        //main_controller->getInvInputFromLayer(j);
+        //main_controller->getAvgOutputFromLayer(j);
+        nextsensor.push_back(main_controller->getInvInputFromLayer(j));
+        nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+      }
+      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+      cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     }
     
-    //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-    //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     /*
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
       cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
