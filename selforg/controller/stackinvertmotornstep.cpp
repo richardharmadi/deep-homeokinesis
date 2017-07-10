@@ -53,6 +53,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   // learning step layer 1
   controllers[0]->step(x_,number_sensors,y_,number_motors);
   for(size_t i=0;i<controllers.size();i++){
+    cout << "step " << i << ": "  << controllers[i]->getStepCounter() << endl;
     if (controllers[i]->getStepCounter()>buffer){
       controllers[i]->getPredSensorValue(temp_pred_x);
       controllers[i]->getInvMotorValue(temp_inv_y);

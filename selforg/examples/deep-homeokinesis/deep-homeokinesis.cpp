@@ -70,7 +70,7 @@ int main(){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
         cout << "iterasi " << j << endl;
-        nextsensor.push_back(main_controller->getInvInputFromLayer(j));
+        nextsensor.push_back(main_controller->getInvInputFromLayer(j)); 
         cout << "berhasil push back" << endl;
         //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
       }
