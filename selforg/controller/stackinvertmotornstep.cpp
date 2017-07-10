@@ -82,7 +82,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
 
     vector<double> vector_ynext;
-    for(size_t j=0;j<number_motors;j++){
+    for(size_t j=0;j<sizeof(ynext_buffer)/sizeof(motor);j++){
+      cout  << "iterasi ke " << j << endl;
       vector_ynext.push_back(ynext_buffer[j]);
     }
 
