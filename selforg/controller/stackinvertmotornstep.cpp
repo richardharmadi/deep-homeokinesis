@@ -121,8 +121,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   }else{
     cout << "masuk else" << endl;
     if(controllers.size()>1){
-      for(size_t i=0;i<controllers.size();i++){
-        controllers[i+1].stepNoLearning(x_,number_sensors,y_,number_motors);
+      for(size_t i=1;i<controllers.size();i++){
+        controllers[i].stepNoLearning(x_,number_sensors,y_,number_motors);
       }
     }
   }
