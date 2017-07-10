@@ -78,7 +78,13 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
     }
     cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
     controllers[1].stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
-    vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
+
+    //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
+
+    vector<double> vector_ynext;
+    for(size_t j=0;j<number_motors;j++){
+      vector_ynext.push_back(ynext_buffer[j]);
+    }
 
     if(!ynext.size()){
       cout << "if ynext" << endl;
