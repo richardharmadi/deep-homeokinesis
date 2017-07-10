@@ -71,13 +71,14 @@ int main(){
         //main_controller->getAvgOutputFromLayer(j);
         cout << "iterasi " << j << endl;
         nextsensor.push_back(main_controller->getInvInputFromLayer(j));
+        cout << "berhasil push back" << endl;
         //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
       }
       cout << "keluar for "<< endl;
       //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
       //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     }
-    cout << "keluar if " << endl;
+    //cout << "keluar if " << endl;
     
     /*
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];

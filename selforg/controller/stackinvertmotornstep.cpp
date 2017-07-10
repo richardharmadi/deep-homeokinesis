@@ -52,7 +52,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_inv_x[number_sensors]; 
   // learning step layer 1
   controllers[0]->step(x_,number_sensors,y_,number_motors);
-  for(size_t i=0;i<controllers.size()-1;i++){
+  for(size_t i=0;i<controllers.size();i++){
     if (controllers[i]->getStepCounter()>buffer){
       controllers[i]->getPredSensorValue(temp_pred_x);
       controllers[i]->getInvMotorValue(temp_inv_y);
@@ -76,7 +76,9 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         inv_x[i] = vector_temp_inv_x;
       }
       cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-      controllers[i+1]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
+      if(i!=0){
+        controllers[i]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
+      }
       //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
 
       vector<double> vector_ynext;
@@ -98,7 +100,6 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       }
     }
   }
-  is_step = true;
 }
 
 /// performs one step without learning. Calulates motor commands from sensor inputs.
@@ -121,6 +122,7 @@ vector<motor> StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
 }
 
 vector<sensor> StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
+  cout << "size " << inv_x.size() << endl;
   return inv_x[layernumber];
 }
 

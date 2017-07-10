@@ -11,7 +11,7 @@
  *   this license, visit http://creativecommons.org/licenses/by-nc-sa/2.5/ *
  *   or send a letter to Creative Commons, 543 Howard Street, 5th Floor,   *
  *   San Francisco, California, 94105, USA.                                *
- *                                                                         *
+ *                                                           /              *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
