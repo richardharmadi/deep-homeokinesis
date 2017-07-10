@@ -1,5 +1,6 @@
 #include "stackinvertmotornstep.h"
 #include "invertmotornstep.h"
+#include <vector>
 
 using namespace matrix;
 using namespace std;
@@ -12,7 +13,8 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   controllers.reserve(nlayers); // memory reserve
 };
 
-void StackInvertMotorNStep::addLayer (InvertMotorNStep cont){
+void StackInvertMotorNStep::addLayer (InvertMotorNStep cont){i
+    //cont = new InvertMotorNStep(); 
   controllers.push_back(cont);
   actual_nlayer+=1;
 }
@@ -22,7 +24,7 @@ StackInvertMotorNStep::~StackInvertMotorNStep()
   InvertMotorNStep* ptr;
   for(vector<InvertMotorNStep>::iterator it = controllers.begin(); it!= controllers.end();++it){
     ptr = &(*it);
-    delete ptr;
+    //delete ptr;
   }
   controllers.clear();
 }
