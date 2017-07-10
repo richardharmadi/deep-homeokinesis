@@ -61,7 +61,7 @@ protected:
 private:
   int actual_nlayer = 0;
   int buffer;
-  double* ynext_buffer; // new output for next layer (averaged output from reconstructed and controller next layer)
+  motor* ynext_buffer; // new output for next layer (averaged output from reconstructed and controller next layer)
   vector<vector<sensor>>pred_x;
   vector<vector<motor>>inv_y;
   vector<vector<sensor>>inv_x; // reconstructed input starting from first layer
