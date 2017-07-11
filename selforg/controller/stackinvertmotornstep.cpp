@@ -53,7 +53,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   // learning step layer 1
   controllers[0]->step(x_,number_sensors,y_,number_motors);
   for(size_t i=0;i<controllers.size();i++){
-    //cout << "step " << i << ": "  << controllers[i]->getStepCounter() << endl;
+    cout << "step " << i << ": "  << controllers[i]->getStepCounter() << endl;
     if (controllers[i]->getStepCounter()>buffer){
       controllers[i]->getPredSensorValue(temp_pred_x);
       controllers[i]->getInvMotorValue(temp_inv_y);
@@ -66,8 +66,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-      if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
-      //if(controllers[i]->getStepCounter() == buffer+1){
+      //if((pred_x.size()<=0) && (inv_y.size()<=0) && (inv_x.size()<=0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+      if(controllers[i]->getStepCounter() == buffer+1){
         pred_x.push_back(vector_temp_pred_x); // we add it to the vector
         inv_y.push_back(vector_temp_inv_y);
         inv_x.push_back(vector_temp_inv_x);
@@ -87,7 +87,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         vector_ynext.push_back(ynext_buffer[j]);
       }
       
-      if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
+      //if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
+      if(controllers[i]->getStepCounter() == buffer+1){
         ynext.push_back(vector_ynext); // motor output start from second layer
       }else{
         ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
