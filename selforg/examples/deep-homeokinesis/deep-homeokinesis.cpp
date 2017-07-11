@@ -1,6 +1,8 @@
 #include<assert.h>
 #include<iostream>
 #include<vector>
+#include <fstream>
+
 using namespace std;
 
 #include <selforg/controller/stackinvertmotornstep.h>
@@ -10,6 +12,7 @@ using namespace std;
 const int MNumber = 2;
 const int SNumber = 2;
 const int buffersize = 50;
+ofstream myfile;
 
 /** The robot control should go here
     @param sensors list of sensor values (to be written) (doubles)
@@ -26,6 +29,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 }
 
 int main(){
+  myfile.open("~/example.csv");
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,3); // initialise with buffer size 50 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
   InvertMotorNStep* controller1 = new InvertMotorNStep();
@@ -52,7 +56,8 @@ int main(){
     // call robot with motors and receive sensors 
     myrobot(sensors, SNumber, motors, MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
-    
+    myfile << "Sensor X0,Motor Y0,Sensor X1,Motor Y1";
+    myfile << sensors[0] << ",";
     /*
     // print some internal parameters of the controller
     list<Inspectable::iparamval> list_ = controller1->getInternalParams();  
@@ -64,6 +69,7 @@ int main(){
     // call controller with sensors and receive motors (both dimension 2)    
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
+    myfile << motors[0] << ",";
 
     if(i>buffersize){
       for(int j=0;j<main_controller->getNLayer()-1;j++){
@@ -74,7 +80,9 @@ int main(){
       }
       cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
       cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
+      myfile << nextsensor[0][0] << "," << nextmotor[0][0] << ",\n";
     }
+
    
     /*
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
@@ -91,5 +99,6 @@ int main(){
   delete controller0;
   delete controller1;
   //delete controller2;
+  myfile.close();
   return 0;
 }
