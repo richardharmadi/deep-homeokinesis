@@ -77,8 +77,13 @@ int main(){
       for(int j=0;j<main_controller->getNLayer()-1;j++){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
-        nextsensor.push_back(main_controller->getInvInputFromLayer(j)); 
-        nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+        if((!nextsensor.size()) && (!nextmotor.size())) { // if the vector is empty
+          nextsensor.push_back(main_controller->getInvInputFromLayer(j));   
+          nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+        }else{
+          nextsensor[j] = main_controller->getInvInputFromLayer(j);
+          nextmotor[j] = main_controller->getAvgOutputFromLayer(j);
+        }
       }
       cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
       cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
