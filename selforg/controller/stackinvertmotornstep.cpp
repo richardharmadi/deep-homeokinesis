@@ -66,8 +66,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-      //if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
-      if(controllers[i]->getStepCounter() == buffer+1){
+      if((pred_x.size()==0) && (inv_y.size()==0) && (inv_x.size()==0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
+      //if(controllers[i]->getStepCounter() == buffer+1){
         pred_x.push_back(vector_temp_pred_x); // we add it to the vector
         inv_y.push_back(vector_temp_inv_y);
         inv_x.push_back(vector_temp_inv_x);
