@@ -86,8 +86,8 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       for(int j=0;j<number_motors;j++){
         vector_ynext.push_back(ynext_buffer[j]);
       }
-
-      if(!ynext.size()){ // if vector is empty then push back
+      
+      if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
         ynext.push_back(vector_ynext); // motor output start from second layer
       }else{
         ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
