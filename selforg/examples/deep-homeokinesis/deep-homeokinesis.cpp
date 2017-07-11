@@ -50,13 +50,12 @@ int main(){
   vector<vector<motor>> nextmotor;
 
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
-
+  myfile << "Sensor X0,Motor Y0,Sensor X1,Motor Y1,\n";
   // the robot is here respresented by the function myrobot
   for(int i=0; i < 100; i++){
     // call robot with motors and receive sensors 
     myrobot(sensors, SNumber, motors, MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
-    myfile << "Sensor X0,Motor Y0,Sensor X1,Motor Y1";
     myfile << sensors[0] << ",";
     /*
     // print some internal parameters of the controller
