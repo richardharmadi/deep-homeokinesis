@@ -85,6 +85,8 @@ int main(){
       cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1];
     */   
   }
+  //cout << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
+  //cout << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
   delete main_controller;
   delete controller0;
   delete controller1;
