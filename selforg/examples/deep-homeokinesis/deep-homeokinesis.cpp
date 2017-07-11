@@ -29,7 +29,7 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
 }
 
 int main(){
-  myfile.open("~/example.csv");
+  myfile.open("example.csv");
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,3); // initialise with buffer size 50 and 2 layers
   InvertMotorNStep* controller0 = new InvertMotorNStep();
   InvertMotorNStep* controller1 = new InvertMotorNStep();
