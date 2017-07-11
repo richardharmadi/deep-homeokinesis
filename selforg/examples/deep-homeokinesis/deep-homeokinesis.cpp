@@ -66,7 +66,7 @@ int main(){
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
     if(i>buffersize){
-      for(int j=0;j<main_controller->getNLayer();j++){
+      for(int j=0;j<main_controller->getNLayer()-1;j++){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
         nextsensor.push_back(main_controller->getInvInputFromLayer(j)); 
