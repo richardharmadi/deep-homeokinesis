@@ -65,7 +65,7 @@ int main(){
     main_controller->step(sensors, SNumber, motors, MNumber); 
     cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
 
-    if(i>=buffersize){
+    if(i>buffersize){
       for(int j=0;j<main_controller->getNLayer();j++){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
