@@ -69,17 +69,13 @@ int main(){
       for(int j=0;j<main_controller->getNLayer();j++){
         //main_controller->getInvInputFromLayer(j);
         //main_controller->getAvgOutputFromLayer(j);
-        cout << "iterasi " << j << endl;
         nextsensor.push_back(main_controller->getInvInputFromLayer(j)); 
-        cout << "berhasil push back" << endl;
-        //nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
+        nextmotor.push_back(main_controller->getAvgOutputFromLayer(j));
       }
-      cout << "keluar for "<< endl;
-      //cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
-      //cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
+      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1];
+     /cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1];
     }
-    //cout << "keluar if " << endl;
-    
+   
     /*
       cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1];
       cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1];
@@ -87,38 +83,7 @@ int main(){
 
       cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1];
       cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1];
-    */
-
-    /*
-    sensor* sensor1 = main_controller->getInvInputFromLayer(0);
-    motor* motor1 = main_controller->getInvOutputFromLayer(0);
-
-    sensor* sensor2 = main_controller->getInvInputFromLayer(1);
-    motor* motor2 = main_controller->getInvOutputFromLayer(1);
-
-    sensor* sensor3 = main_controller->getInvInputFromLayer(2);
-    motor* motor3 = main_controller->getInvOutputFromLayer(2);
-    */
-    
-    /*
-    cout << i << " Sensor X1: " << sensor1[0] << ", " << sensor1[1];
-    cout << i << " Motor Y1: " << motor1[0] << ", " << motor1[1];
-
-    cout << i << " Sensor X2: " << sensor2[0] << ", " << sensor2[1];
-    cout << i << " Motor Y2: " << motor2[0] << ", " << motor2[1];
-
-
-    cout << i << " Sensor X3: " << sensor3[0] << ", " << sensor3[1];
-    cout << i << " Motor Y3: " << motor3[0] << ", " << motor3[1];
-    */
-    /*
-    cout << i << " Sensor X1: " << *sensor1;
-    cout << i << " Motor Y1: " << *motor1;
-    cout << i << " Sensor X2: " << *sensor2;
-    cout << i << " Motor Y2: " << *motor2;
-    cout << i << " Sensor X3: " << *sensor3;
-    cout << i << " Motor Y3 " << *motor3;
-    */
+    */   
   }
   delete main_controller;
   delete controller0;
