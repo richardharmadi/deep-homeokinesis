@@ -79,21 +79,19 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
       cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
       if(i!=0){
         controllers[i]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
-      }
-      //vector<double> vector_ynext(ynext_buffer, ynext_buffer + sizeof(ynext_buffer) / sizeof(motor));
 
-      vector<double> vector_ynext;
-      for(int j=0;j<number_motors;j++){
-        vector_ynext.push_back(ynext_buffer[j]);
+        vector<double> vector_ynext;
+        for(int j=0;j<number_motors;j++){ // fill buffer to vector
+          vector_ynext.push_back(ynext_buffer[j]);
+        }
+        //if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
+        if(controllers[i]->getStepCounter() == buffer+1){
+          ynext.push_back(vector_ynext); // motor output start from second layer
+        }else{
+          ynext[i-1] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
+        }
+        cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
       }
-      
-      //if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
-      if(controllers[i]->getStepCounter() == buffer+1){
-        ynext.push_back(vector_ynext); // motor output start from second layer
-      }else{
-        ynext[i] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
-      }
-      cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
     }else{
       if(i!=0){
         controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
