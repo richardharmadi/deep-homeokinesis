@@ -75,7 +75,6 @@ public:
                               motor* , int number_motors);
 
   virtual void stepNextLayer(sensor* , int number_sensors, motor* , int number_motors, motor* yinv);
-
   /**** STOREABLE ****/
   /** stores the controller values to a given file. */
   virtual bool store(FILE* f) const;
@@ -233,7 +232,6 @@ protected:
   //  and x delayed by one
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void calcXsi(int delay);
-
   /// learn H,C with motors y and corresponding sensors x
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void learnController(int delay);

@@ -54,6 +54,7 @@ public:
   virtual vector<motor> getAvgOutputFromLayer(int layernumber);
   virtual int getNLayer() const { return actual_nlayer; };
 
+  virtual void updateMotorValue(int layernumber, motor* y_);
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;

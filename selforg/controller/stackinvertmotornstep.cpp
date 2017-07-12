@@ -52,23 +52,48 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_inv_y[number_motors];
   double temp_inv_x[number_sensors]; 
   // learning step layer 1
-  controllers[0]->step(x_,number_sensors,y_,number_motors); // run one step of the first controller to get the value for next layer input
+  //controllers[0]->step(x_,number_sensors,y_,number_motors); // run one step of the first controller to get the value for next layer input
   for(size_t i=0;i<controllers.size();i++){
     //cout << "step " << i << ": "  << controllers[i]->getStepCounter() << endl;
-    if (controllers[i]->getStepCounter()>buffer){
-      controllers[i]->getPredSensorValue(temp_pred_x);
-      controllers[i]->getInvMotorValue(temp_inv_y);
-      controllers[i]->getInvSensorValue(temp_inv_x);
+    if (controllers[i]->getStepCounter()<=buffer){ // if the buffer haven't been filled up
+      controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
+    }else { // if the buffer has filled
+      if (i==0){ // if its the first controller
+        controllers[i]->step(x_,number_sensors,y_,number_motors); // run the learning step (it will first re-check if the buffer already filled) (step up)
 
-      //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
-      //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
-      //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
+        // output all the prediction and inverted value (step down)
+        controllers[i]->getPredSensorValue(temp_pred_x);
+        controllers[i]->getInvMotorValue(temp_inv_y);
+        controllers[i]->getInvSensorValue(temp_inv_x);
 
+        //cout << "Xprime 0: " << temp_pred_x[0] << ", " << temp_pred_x[1] << endl;
+        //cout << "Y1 : " << temp_inv_y[0] << ", " << temp_inv_y[1] << endl;
+        //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
+      }else{ // if it's the next controller
+        controllers[i]->step(temp_inv_x,number_sensors,ynext_buffer,number_motors); // we use previous inv_x as input, and put the out to a new ynext_buffer
+        updateMotorValue(i,ynext_buffer); // we update the previous controller i-1 output buffer value with this controller new generated output
+        vector<double> vector_ynext; // initiate temporary vector
+        for(int j=0;j<number_motors;j++){ // fill buffer to vector
+          vector_ynext.push_back(ynext_buffer[j]);
+        }
+        if(ynext.size()<i){ // if element in the vector is less than controller number, then push back
+          ynext.push_back(vector_ynext); // motor output start from second layer
+        }else{
+          ynext[i-1] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
+        }
+        //cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
+        
+        // output all the prediction and inverted value (step down)
+        controllers[i]->getPredSensorValue(temp_pred_x);
+        controllers[i]->getInvMotorValue(temp_inv_y);
+        controllers[i]->getInvSensorValue(temp_inv_x);
+      }
+      // put the output value into into a temporary vector, for being pushed to our vector of vector output later
       vector<double> vector_temp_pred_x(temp_pred_x, temp_pred_x + sizeof(temp_pred_x) / sizeof(sensor)); 
       vector<double> vector_temp_inv_y(temp_inv_y, temp_inv_y + sizeof(temp_inv_y) / sizeof(motor)); 
       vector<double> vector_temp_inv_x(temp_inv_x, temp_inv_x + sizeof(temp_inv_x) / sizeof(sensor));
-      //if((pred_x.size()<=0) && (inv_y.size()<=0) && (inv_x.size()<=0)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
-      if(controllers[i]->getStepCounter() == buffer+1){
+      //if(controllers[i]->getStepCounter()==buffer+1){
+      if((pred_x.size()<=i) && (inv_y.size()<=i) && (inv_x.size()<=i)){ // if the vector of our output has less value than the controller (size starts from index 0 while controllers 1, so we can use equals)
         pred_x.push_back(vector_temp_pred_x); // we add it to the vector
         inv_y.push_back(vector_temp_inv_y);
         inv_x.push_back(vector_temp_inv_x);
@@ -76,25 +101,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         pred_x[i] = vector_temp_pred_x; // if its already there, we update the value for each learning step
         inv_y[i] = vector_temp_inv_y;
         inv_x[i] = vector_temp_inv_x;
-      }
-      //cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
-      if(i!=0){
-        controllers[i]->stepNextLayer(temp_pred_x,number_sensors,ynext_buffer,number_motors,temp_inv_y);
-        vector<double> vector_ynext;
-        for(int j=0;j<number_motors;j++){ // fill buffer to vector
-          vector_ynext.push_back(ynext_buffer[j]);
-        }
-        //if(ynext.size()<=i){ // if element in the vector is less than controller number, then push back
-        if(controllers[i]->getStepCounter() == buffer+2){ // since stepnextlayer already increase the step counter
-          ynext.push_back(vector_ynext); // motor output start from second layer
-        }else{
-          ynext[i-1] = vector_ynext; //y1 is in index 0, that's why it's called ynext, the index is for the output of next layer
-        }
-        //cout << "Y1 " << ynext[0][0] << ", " << ynext[0][1] <<endl;
-      }
-    }else{
-      if(i!=0){
-        controllers[i]->stepNoLearning(x_,number_sensors,y_,number_motors);
+        //cout << "X1 from vector :" << inv_x[0][0] << ", " << inv_x[0][1] << endl;
       }
     }
   }
@@ -109,6 +116,13 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   // update step counter
   t++;
   */
+}
+
+void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){
+  int n = controllers[layernumber]->getStepCounter(); // get number of step
+  matrix::Matrix yupdate (number_motors,1,y_); 
+  controllers[layernumber-1].y_buffer[n % buffersize] += yupdate; // add the previous controller buffer output value of this step with this layer output value
+  controllers[layernumber-1].y_buffer[n % buffersize] *= 0.5; // avg them
 }
 
 vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){

@@ -296,17 +296,6 @@ void InvertMotorNStep::calcXsi(int delay)
   xsi_norm = xsi.multTM().val(0,0);
 }
 
-void InvertMotorNStep::calcXsiNextLayer(int delay)
-{
-  const Matrix& x     = x_buffer[t% buffersize];
-  const Matrix& y     = y_buffer[(t - 1 - delay) % buffersize];
-  //  xsi = (x -  model(x_buffer, 1 , y));
-  xpred = model(x_buffer,1,y); // new Richard 03.07.2017
-  xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
-  //  xsi_norm = matrixNorm1(xsi);
-  xsi_norm = xsi.multTM().val(0,0);
-}
-
 /// calculates the predicted sensor values
 Matrix InvertMotorNStep::model(const Matrix* x_buffer, int delay, const matrix::Matrix& y)
 {
@@ -793,9 +782,10 @@ void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sen
     Matrix y_noise = noiseMatrix(y.getM(),y.getN(), *YNoiseGen, -noiseY, noiseY);
     y += y_noise;
   }
-  Matrix yinvMatrix(number_motors,1,yinv);
-  y += yinvMatrix;
-  y *= 0.5; //averaging between new y and reconstructed y from previous layer
+  // wrong implementation of top-down control!
+  // Matrix yinvMatrix(number_motors,1,yinv);
+  // y += yinvMatrix;
+  // y *= 0.5; //averaging between new y and reconstructed y from previous layer
 
   if (activeExplore != 0)
     {
