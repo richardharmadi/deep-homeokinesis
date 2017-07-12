@@ -772,7 +772,7 @@ void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, 
 };
 
 void InvertMotorNStep::setYbuffer(int idx, matrix::Matrix yupdate){
-  *y_buffer[idx] = yupdate;
+  y_buffer[idx] = yupdate;
 }
 
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
