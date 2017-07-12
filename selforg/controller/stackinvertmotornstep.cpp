@@ -120,9 +120,11 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
 
 void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){
   int n = controllers[layernumber]->getStepCounter(); // get number of step
-  matrix::Matrix yupdate (number_motors,1,y_); 
-  controllers[layernumber-1].y_buffer[n % buffersize] += yupdate; // add the previous controller buffer output value of this step with this layer output value
-  controllers[layernumber-1].y_buffer[n % buffersize] *= 0.5; // avg them
+  matrix::Matrix yupdate (number_motors,1,y_);
+  matrix::Matrix ybuffer = controllers[layernumber-1]->getYbuffer(n % buffersize);
+  ybuffer += yupdate; // add the previous controller buffer output value of this step with this layer output value
+  ybuffer *- 0.5; // avg them
+  controllers[layernumber-1]->setYbuffer(ybuffer);
 }
 
 vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){

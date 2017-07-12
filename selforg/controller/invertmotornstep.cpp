@@ -771,6 +771,10 @@ void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, 
   step_counter++;
 };
 
+void InvertMotorNStep::setYbuffer(int idx, matrix::Matrix yupdate){
+  *y_buffer[idx] = yupdate;
+}
+
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
   Matrix x(number_sensors,1,x_);
