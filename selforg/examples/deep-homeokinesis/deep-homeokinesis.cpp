@@ -55,7 +55,7 @@ int main(){
   inputvalue << "Sensor X0,Motor Y0,\n";
   outputvalue << "Sensor X1,Motor Y1,\n";
   // the robot is here respresented by the function myrobot
-  for(int i=0; i < 100; i++){
+  for(int i=0; i < 1000; i++){
     // call robot with motors and receive sensors 
     myrobot(sensors, SNumber, motors, MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
