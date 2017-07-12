@@ -139,8 +139,6 @@ public:
    */
   virtual void setReinforcement(double reinforcement);
 
-
-
   static InvertMotorNStepConf getDefaultConf(){
     InvertMotorNStepConf c;
     c.buffersize = 50;

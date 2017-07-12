@@ -296,6 +296,17 @@ void InvertMotorNStep::calcXsi(int delay)
   xsi_norm = xsi.multTM().val(0,0);
 }
 
+void InvertMotorNStep::calcXsiNextLayer(int delay)
+{
+  const Matrix& x     = x_buffer[t% buffersize];
+  const Matrix& y     = y_buffer[(t - 1 - delay) % buffersize];
+  //  xsi = (x -  model(x_buffer, 1 , y));
+  xpred = model(x_buffer,1,y); // new Richard 03.07.2017
+  xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
+  //  xsi_norm = matrixNorm1(xsi);
+  xsi_norm = xsi.multTM().val(0,0);
+}
+
 /// calculates the predicted sensor values
 Matrix InvertMotorNStep::model(const Matrix* x_buffer, int delay, const matrix::Matrix& y)
 {
@@ -748,7 +759,7 @@ void InvertMotorNStep::getPredSensorValue(sensor* xpred_){
 }
 
 void InvertMotorNStep::getInvMotorValue(motor* yinv_){
-  yinv = eta_buffer[(t-1)%buffersize] - getLastMotorValues();
+  yinv = getLastMotorValues() - eta_buffer[(t-1)%buffersize];
   yinv.convertToBuffer(yinv_,number_motors);
 }
 

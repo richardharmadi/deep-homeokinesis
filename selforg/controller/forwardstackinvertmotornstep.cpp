@@ -1,11 +1,11 @@
-#include "stackinvertmotornstep.h"
+#include "forwardstackinvertmotornstep.h"
 #include "invertmotornstep.h"
 #include <vector>
 
 using namespace matrix;
 using namespace std;
 
-StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
+FWDStackInvertMotorNStep::FWDStackInvertMotorNStep(int buffersize, int nlayers)
     : InvertMotorController(buffersize, "StackInvertMotorNStep", "$Id$")
 {
   // layers only used for memory reservation
@@ -13,13 +13,13 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   controllers.reserve(nlayers); // memory reserve
 };
 
-void StackInvertMotorNStep::addLayer (InvertMotorNStep* cont){
+void FWDStackInvertMotorNStep::addLayer (InvertMotorNStep* cont){
     //cont = new InvertMotorNStep(); 
   controllers.push_back(cont);
   actual_nlayer+=1;
 }
 
-StackInvertMotorNStep::~StackInvertMotorNStep()
+FWDStackInvertMotorNStep::~FWDStackInvertMotorNStep()
 {
   /*InvertMotorNStep* ptr;
   for(vector<InvertMotorNStep>::iterator it = controllers.begin(); it!= controllers.end();++it){
@@ -29,7 +29,7 @@ StackInvertMotorNStep::~StackInvertMotorNStep()
   controllers.clear();
 }
 
-void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
+void FWDStackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
 {
   
   assert(sensornumber>=motornumber);
@@ -40,11 +40,10 @@ void StackInvertMotorNStep::init(int sensornumber, int motornumber, RandGen* ran
     (*it)->init(number_sensors,number_motors,randGen);
   }
   ynext_buffer = new motor[number_motors];
-  controllers[0]->step(x_,number_sensors,y_,number_motors); // run one step of the first controller to get the value for next layer input
 }
 
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
-void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
+void FWDStackInvertMotorNStep::step(const sensor* x_, int number_sensors,
                                  motor* y_, int number_motors)
 {
   // buffer for previous layer output
@@ -52,6 +51,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
   double temp_inv_y[number_motors];
   double temp_inv_x[number_sensors]; 
   // learning step layer 1
+  controllers[0]->step(x_,number_sensors,y_,number_motors);
   for(size_t i=0;i<controllers.size();i++){
     //cout << "step " << i << ": "  << controllers[i]->getStepCounter() << endl;
     if (controllers[i]->getStepCounter()>buffer){
@@ -100,7 +100,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
 }
 
 /// performs one step without learning. Calulates motor commands from sensor inputs.
-void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
+void FWDStackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
                                       motor*  y, int number_motors )
 {
   /*
@@ -110,23 +110,23 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   */
 }
 
-vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
+vector<sensor> FWDStackInvertMotorNStep::getPredInputFromLayer(int layernumber){
   return pred_x[layernumber]; 
 }
 
-vector<motor> StackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
+vector<motor> FWDStackInvertMotorNStep::getInvOutputFromLayer(int layernumber){
   return inv_y[layernumber];
 }
 
-vector<sensor> StackInvertMotorNStep::getInvInputFromLayer(int layernumber){
+vector<sensor> FWDStackInvertMotorNStep::getInvInputFromLayer(int layernumber){
   return inv_x[layernumber];
 }
 
-vector<motor> StackInvertMotorNStep::getAvgOutputFromLayer(int layernumber){
+vector<motor> FWDStackInvertMotorNStep::getAvgOutputFromLayer(int layernumber){
   return ynext[layernumber];
 }
 
-bool StackInvertMotorNStep::store(FILE* f) const
+bool FWDStackInvertMotorNStep::store(FILE* f) const
 {
   /*
   matrix::Matrix Xpred(number_sensors,1,pred_x);
@@ -141,7 +141,7 @@ bool StackInvertMotorNStep::store(FILE* f) const
   return true;
 }
 
-bool StackInvertMotorNStep::restore(FILE* f)
+bool FWDStackInvertMotorNStep::restore(FILE* f)
 {
   /*
   matrix::Matrix Xpred(number_sensors,1,pred_x);
