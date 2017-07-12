@@ -124,7 +124,7 @@ void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){
   matrix::Matrix ybuffer = controllers[layernumber-1]->getYbuffer(n % buffersize);
   ybuffer += yupdate; // add the previous controller buffer output value of this step with this layer output value
   ybuffer *- 0.5; // avg them
-  controllers[layernumber-1]->setYbuffer(ybuffer);
+  controllers[layernumber-1]->setYbuffer((n % buffersize),ybuffer);
 }
 
 vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
