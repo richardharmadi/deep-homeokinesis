@@ -52,7 +52,7 @@ public:
   virtual vector<motor> getInvOutputFromLayer(int layernumber);
   virtual vector<sensor> getInvInputFromLayer(int layernumber);
   virtual vector<motor> getAvgOutputFromLayer(int layernumber);
-  virtual int getNLayer() const { return actual_nlayer; };
+  virtual unsigned int getNLayer() const { return actual_nlayer; };
 
   virtual void updateMotorValue(int layernumber, motor* y_);
 protected:
@@ -60,7 +60,7 @@ protected:
   unsigned short number_motors;
 
 private:
-  int actual_nlayer = 0;
+  unsigned int actual_nlayer = 0;
   int buffer;
   motor* ynext_buffer; // new output for next layer (averaged output from reconstructed and controller next layer)
   vector<vector<sensor>>pred_x;
