@@ -28,7 +28,7 @@
 #include <list>
 
 #include "plotoption.h"
-#include <selforg/abstractcontroller.h>
+#include <selforg/controller/abstractcontroller.h>
 
 class Inspectable;
 

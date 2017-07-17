@@ -29,12 +29,12 @@
 #include <string>
 
 #include "wiredcontroller.h"
-#include "randomgenerator.h"
+#include <selforg/utils/randomgenerator.h>
 
 class AbstractRobot;
 
-#include "types.h"
-#include "trackrobots.h"
+#include <selforg/utils/types.h>
+#include <selforg/utils/trackrobots.h>
 
 /** The Agent contains a controller, a robot and a wiring, which connects robot and controller.
     Additionally there are some ways to keep track of internal information.
