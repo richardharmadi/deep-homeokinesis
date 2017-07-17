@@ -28,7 +28,7 @@
 #ifndef     WIREDCONTROLLER_H_
 #define     WIREDCONTROLLER_H_
 
-#include "plotoptionengine.h"
+#include <selforg/utils/plotoptionengine.h>
 #include "backcaller.h"
 #include "types.h"
 #include "inspectable.h"
