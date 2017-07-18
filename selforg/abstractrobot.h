@@ -29,9 +29,9 @@
 #include <string>
 
 #include "trackable.h"
-#include "configurable.h"
-#include "position.h"
-#include "sensormotorinfo.h"
+#include <selforg/utils/configurable.h>
+#include <selforg/utils/position.h>
+#include <selforg/utils/sensormotorinfo.h>
 
 /**
  * Abstract class (interface) for robot in general

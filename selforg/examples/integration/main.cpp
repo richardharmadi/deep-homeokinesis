@@ -8,9 +8,9 @@ using namespace std;
 
 #include <selforg/agent.h>
 #include <selforg/abstractrobot.h>
-#include <selforg/invertmotorspace.h>
-#include <selforg/one2onewiring.h>
-#include <selforg/derivativewiring.h>
+#include <selforg/controller/invertmotorspace.h>
+#include <selforg/wirings/one2onewiring.h>
+#include <selforg/wirings/derivativewiring.h>
 
 #include "cmdline.h"
 

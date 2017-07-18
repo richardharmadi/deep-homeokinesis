@@ -1,7 +1,7 @@
 #ifndef _CMDLINE_H
 #define _CMDLINE_H
 
-#include <selforg/configurable.h> 
+#include <selforg/utils/configurable.h> 
 #include <vector>
 
 typedef vector<Configurable*> ConfigList; 

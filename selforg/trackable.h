@@ -24,7 +24,7 @@
 #ifndef __TRACKABLE_H
 #define __TRACKABLE_H
 
-#include <selforg/position.h>
+#include <selforg/utils/position.h>
 //#include <selforg/matrix.h>
 
 namespace matrix {

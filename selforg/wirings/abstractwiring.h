@@ -25,11 +25,11 @@
 #define __ABSTRACTWIRING_H
 
 //#include "abstractrobot.h"
-#include "matrix.h"
-#include "noisegenerator.h"
-#include "inspectable.h"
-#include "randomgenerator.h"
-#include "sensormotorinfo.h"
+#include <selforg/matrix/matrix.h>
+#include <selforg/utils/noisegenerator.h>
+#include <selforg/utils/inspectable.h>
+#include <selforg/utils/randomgenerator.h>
+#include <selforg/utils/sensormotorinfo.h>
 
 
 /** Abstract wiring-object between controller and robot.

@@ -28,12 +28,12 @@
 #ifndef     WIREDCONTROLLER_H_
 #define     WIREDCONTROLLER_H_
 
-#include "plotoptionengine.h"
-#include "backcaller.h"
-#include "types.h"
-#include "inspectable.h"
-#include "configurable.h"
-#include "randomgenerator.h"
+#include <selforg/utils/plotoptionengine.h>
+#include <selforg/utils/backcaller.h>
+#include <selforg/utils/types.h>
+#include <selforg/utils/inspectable.h>
+#include <selforg/utils/configurable.h>
+#include <selforg/utils/randomgenerator.h>
 
 #include <stdio.h>
 #include <list>
