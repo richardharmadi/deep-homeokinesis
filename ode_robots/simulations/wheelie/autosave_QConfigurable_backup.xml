@@ -1,0 +1,134 @@
+<!DOCTYPE ConfigurableStateTypeDefinition>
+<ConfigurableStates>
+ <ConfigurableState name="Simulation Environment_0">
+  <ConfigurableWidget tileWidgetWidth="210" isCollapsed="false" numberOfTilesPerRow="3">
+   <ConfigurableTileWidgets>
+    <ConfigurableTileWidget gridRow="0" gridColumn="0" name="cameraspeed" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="1" name="commandline" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="2" name="controlinterval" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="0" name="fps" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="1" name="gravity" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="2" name="logwhilerecording" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="0" name="noise" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="1" name="randomseed" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="2" name="realtimefactor" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="3" gridColumn="0" name="simstepsize" isVisible="true"/>
+   </ConfigurableTileWidgets>
+  </ConfigurableWidget>
+  <Configurable revision="$Id$" id="846930886" name="Simulation Environment" autosaveFunction="1">
+   <!--While in autosave mode, only values, bounds and descriptions of parameters which are differing from their original values are stored.-->
+   <paramvals>
+    <paramval name="cameraspeed"/>
+    <paramval name="fps"/>
+    <paramval name="gravity"/>
+    <paramval name="noise"/>
+    <paramval name="randomseed"/>
+    <paramval value="1.00096" name="realtimefactor"/>
+    <paramval name="simstepsize"/>
+   </paramvals>
+   <paramints>
+    <paramint name="controlinterval"/>
+   </paramints>
+   <parambools>
+    <parambool name="commandline"/>
+    <parambool name="logwhilerecording"/>
+   </parambools>
+  </Configurable>
+ </ConfigurableState>
+ <ConfigurableState name="sliderWheelie1_0">
+  <ConfigurableWidget tileWidgetWidth="210" isCollapsed="false" numberOfTilesPerRow="3">
+   <ConfigurableTileWidgets>
+    <ConfigurableTileWidget gridRow="0" gridColumn="0" name="frictionground" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="1" name="motordamp" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="2" name="motorpower" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="0" name="powerratio" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="1" name="sensorfactor" isVisible="true"/>
+   </ConfigurableTileWidgets>
+  </ConfigurableWidget>
+  <Configurable revision="$Id$" id="582271385" name="sliderWheelie1" autosaveFunction="1">
+   <!--While in autosave mode, only values, bounds and descriptions of parameters which are differing from their original values are stored.-->
+   <paramvals>
+    <paramval name="frictionground"/>
+    <paramval name="motordamp"/>
+    <paramval value="4.00036" name="motorpower"/>
+    <paramval name="powerratio"/>
+    <paramval name="sensorfactor"/>
+   </paramvals>
+   <paramints/>
+   <parambools/>
+  </Configurable>
+ </ConfigurableState>
+ <ConfigurableState name="InvertMotorNStep_0">
+  <ConfigurableWidget tileWidgetWidth="210" isCollapsed="false" numberOfTilesPerRow="3">
+   <ConfigurableTileWidgets>
+    <ConfigurableTileWidget gridRow="0" gridColumn="0" name="activeexpl" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="1" name="adaptrate" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="0" gridColumn="2" name="cdiagabs" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="0" name="cfactor" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="1" name="cnondiagabs" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="1" gridColumn="2" name="continuity" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="0" name="dampA" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="1" name="dampC" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="2" gridColumn="2" name="dampS" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="3" gridColumn="0" name="desens" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="3" gridColumn="1" name="epsA" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="3" gridColumn="2" name="epsC" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="4" gridColumn="0" name="factorB" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="4" gridColumn="1" name="inhibition" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="4" gridColumn="2" name="kwta" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="5" gridColumn="0" name="limitrf" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="5" gridColumn="1" name="logaE" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="5" gridColumn="2" name="modelcompl" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="6" gridColumn="0" name="noiseB" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="6" gridColumn="1" name="noiseY" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="6" gridColumn="2" name="nomupdate" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="7" gridColumn="0" name="relativeE" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="7" gridColumn="1" name="rootE" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="7" gridColumn="2" name="s4avg" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="8" gridColumn="0" name="s4delay" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="8" gridColumn="1" name="squashsize" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="8" gridColumn="2" name="steps" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="9" gridColumn="0" name="teacher" isVisible="true"/>
+    <ConfigurableTileWidget gridRow="9" gridColumn="1" name="zetaupdate" isVisible="true"/>
+   </ConfigurableTileWidgets>
+  </ConfigurableWidget>
+  <Configurable revision="$Id$" id="1847002325" name="InvertMotorNStep" autosaveFunction="1">
+   <!--While in autosave mode, only values, bounds and descriptions of parameters which are differing from their original values are stored.-->
+   <paramvals>
+    <paramval name="activeexpl"/>
+    <paramval name="adaptrate"/>
+    <paramval name="cdiagabs"/>
+    <paramval value="0.99943" name="cfactor"/>
+    <paramval value="-0.00027" name="cnondiagabs"/>
+    <paramval name="continuity"/>
+    <paramval name="dampA"/>
+    <paramval name="dampC"/>
+    <paramval name="dampS"/>
+    <paramval name="desens"/>
+    <paramval value="0.009414994633246038" name="epsA"/>
+    <paramval name="epsC"/>
+    <paramval name="factorB"/>
+    <paramval value="-0.0005999999999999999" name="inhibition"/>
+    <paramval value="2.00051" name="kwta"/>
+    <paramval name="limitrf"/>
+    <paramval name="modelcompl"/>
+    <paramval name="noiseB"/>
+    <paramval name="noiseY"/>
+    <paramval name="nomupdate"/>
+    <paramval name="squashsize"/>
+    <paramval name="steps"/>
+    <paramval name="teacher"/>
+    <paramval name="zetaupdate"/>
+   </paramvals>
+   <paramints>
+    <paramint name="logaE"/>
+    <paramint name="rootE"/>
+    <paramint name="s4avg"/>
+    <paramint name="s4delay"/>
+   </paramints>
+   <parambools>
+    <parambool name="relativeE"/>
+   </parambools>
+  </Configurable>
+ </ConfigurableState>
+</ConfigurableStates>
