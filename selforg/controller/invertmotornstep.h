@@ -160,7 +160,10 @@ public:
   double getE() const {return v.multTM().val(0,0);}
   int getStepCounter() {return step_counter;}
   matrix::Matrix getYbuffer(int idx) {return y_buffer[idx];}
+  matrix::Matrix getXbuffer(int idx) {return x_buffer[idx];}
   void setYbuffer(int idx,matrix::Matrix yupdate);
+  void setXbuffer(int idx,matrix::Matrix xupdate);
+  void setXbufferUpdate(int idx,matrix::Matrix xupdate);
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;

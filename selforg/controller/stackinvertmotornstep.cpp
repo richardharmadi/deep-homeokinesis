@@ -71,6 +71,7 @@ void StackInvertMotorNStep::step(const sensor* x_, int number_sensors,
         //cout << "X1 : " << temp_inv_x[0] << ", " << temp_inv_x[1] << endl;
       }else{ // if it's the next controller
         controllers[i]->step(temp_inv_x,number_sensors,ynext_buffer,number_motors); // we use previous inv_x as input, and put the out to a new ynext_buffer
+        updateSensorValue(i,ynext_buffer); // use this previous output to generate new prediction input from previous model
         updateMotorValue(i,ynext_buffer); // we update the previous controller i-1 output buffer value with this controller new generated output
         vector<double> vector_ynext; // initiate temporary vector
         for(int j=0;j<number_motors;j++){ // fill buffer to vector
@@ -118,15 +119,20 @@ void StackInvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   */
 }
 
-void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){
+void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){ // top down control mode, update previous layer output with next layer output (averaged)
   int n = controllers[layernumber]->getStepCounter(); // get number of step
   matrix::Matrix yupdate (number_motors,1,y_);
   matrix::Matrix ybuffer = controllers[layernumber-1]->getYbuffer(n % buffersize);
   ybuffer += yupdate; // add the previous controller buffer output value of this step with this layer output value
-  ybuffer *- 0.5; // avg them
+  ybuffer *= 0.5; // avg them
   controllers[layernumber-1]->setYbuffer((n % buffersize),ybuffer);
 }
 
+void StackInvertMotorNStep::updateSensorValue(int layernumber, motor* y_){ // top down control mode, update previous layer input with next layer virtual input (== prediction input produced by next layer output, averaged)
+  int n = controllers[layernumber]->getStepCounter(); // get number of step
+  matrix::Matrix yupdate (number_motors,1,y_);
+  matrix::Matrix xbuffer = controllers[layernumber-1]->setXbufferUpdate((n % buffersize),yupdate);
+}
 vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
   return pred_x[layernumber]; 
 }

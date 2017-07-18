@@ -55,6 +55,7 @@ public:
   virtual unsigned int getNLayer() const { return actual_nlayer; };
 
   virtual void updateMotorValue(int layernumber, motor* y_);
+  virtual void updateSensorValue(int layernumber, sensor* x_);
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;

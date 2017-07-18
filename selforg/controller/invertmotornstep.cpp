@@ -775,6 +775,19 @@ void InvertMotorNStep::setYbuffer(int idx, matrix::Matrix yupdate){
   y_buffer[idx] = yupdate;
 }
 
+void InvertMotorNStep::setXbuffer(int idx, matrix::Matrix xupdate){
+  x_buffer[idx] = xupdate;
+}
+
+void InvertMotorNStep::setXbufferUpdate(int idx, matrix::Matrix xupdate){
+  Matrix& x_buffer_update = xupdate; // get next layer output
+  Matrix xp = model(x_buffer,1,x_buffer_update); // feed it to this layer model
+  Matrix xbuff = getXbuffer(idx); // get current xbuffer
+  xbuff += xp; // update current buffer with the value
+  xbuff *= 0.5; //avg them
+  setXbuffer(idx, xbuff);
+}
+
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
   assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
   Matrix x(number_sensors,1,x_);
