@@ -1,5 +1,6 @@
 #include<assert.h>
 #include<iostream>
+#include<math.h>
 #include<vector>
 #include <fstream>
 
@@ -13,6 +14,8 @@ const int MNumber = 2;
 const int SNumber = 2;
 const int buffersize = 50;
 ofstream inputvalue,outputvalue;
+
+#define PI 3.14159265
 
 /** The robot control should go here
     @param sensors list of sensor values (to be written) (doubles)
@@ -28,14 +31,20 @@ void myrobot(double* sensors, int sensornumber, const double* motors, int motorn
   sensors[1]=motors[1]+(double(rand())/RAND_MAX-0.5)*0.3;
 }
 
+void sinerobot(double param, double* sensors, int sensornumber, const double* motors, int motornumber){
+  assert(sensornumber >= 2 && motornumber >= 2); // check dimensions
+  //the robot consits here just of a bit noise
+  sensors[0]=sin(param*PI/180);
+  sensors[1]=motors[1]+(double(rand())/RAND_MAX-0.5)*0.3;
+}
 int main(){
   // ---------- 2 layers ---------------------//
-  // inputvalue.open("top-down_2layers_input.csv");
-  // outputvalue.open("top-down_2layers_output.csv");
+  // inputvalue.open("top-down_sinewave_2layers_input.csv");
+  // outputvalue.open("top-down_sinewave_2layers_output.csv");
 
   // ---------- 3 layers ---------------------//
-  inputvalue.open("top-down_3layers_input-rateA001-Ce3.csv");
-  outputvalue.open("top-down_3layers_output-rateA001-Ce3.csv");
+  inputvalue.open("top-down_sinewave3layers_input_rateA001-Ce3.csv");
+  outputvalue.open("top-down_sinewave3layers_outputrateA001-Ce3.csv");
   
   // ---------- 5 layers --------------------//
   // inputvalue.open("top-down_5layers_input.csv");
@@ -114,7 +123,8 @@ int main(){
   // the robot is here respresented by the function myrobot
   for(int i=0; i < 1000; i++){
     // call robot with motors and receive sensors 
-    myrobot(sensors, SNumber, motors, MNumber);
+    //myrobot(sensors, SNumber, motors, MNumber);
+    sinerobot(i,sensors,SNumber,motors,MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
     inputvalue << sensors[0] << ",";
     /*
