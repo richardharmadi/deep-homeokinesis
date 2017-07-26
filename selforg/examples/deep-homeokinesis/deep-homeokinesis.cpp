@@ -37,6 +37,20 @@ void sinerobot(double param, double* sensors, int sensornumber, const double* mo
   sensors[0]=sin(param*PI/180);
   sensors[1]=motors[1]+(double(rand())/RAND_MAX-0.5)*0.3;
 }
+
+void zerorobot(double param, double* sensors, int sensornumber, const double* motors, int motornumber){
+  assert(sensornumber >= 2 && motornumber >= 2); // check dimensions
+  //the robot consits here just of a bit noise
+  sensors[0]=(double(rand())/RAND_MAX-0.5)*0.0;
+  sensors[1]=(double(rand())/RAND_MAX-0.5)*0.0;
+}
+
+void noiserobot(double* sensors, int sensornumber, const double* motors, int motornumber){  
+  assert(sensornumber >= 2 && motornumber >= 2); // check dimensions
+  //the robot consits here just of a bit noise
+  sensors[0]=(double(rand())/RAND_MAX-0.5)*0.3;
+  sensors[1]=(double(rand())/RAND_MAX-0.5)*0.3;
+}
 int main(){
   // ---------- 2 layers ---------------------//
   // inputvalue.open("top-down_sinewave_2layers_input.csv");
