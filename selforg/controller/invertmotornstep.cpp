@@ -786,7 +786,6 @@ void InvertMotorNStep::setXbufferUpdate(int idx, matrix::Matrix xupdate){
   xbuff += xp; // update current buffer with the value
   xbuff *= 0.5; //avg them
   setXbuffer(idx, xbuff);
-  return xbuff;
 }
 
 void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
