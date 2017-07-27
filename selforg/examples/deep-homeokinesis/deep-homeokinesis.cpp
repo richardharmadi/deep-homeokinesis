@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
   stringstream ss_input;
   stringstream ss_output;
   ss_input << argv[3] << "_" << argv[2] << "_" << argv[1] <<"layer_input.csv";
-  ss_output << argv[3] << "_" << argv[2] << "_" << argv[1] <<"layer_input.csv";
+  ss_output << argv[3] << "_" << argv[2] << "_" << argv[1] <<"layer_output.csv";
 
   string filename_input = ss_input.str();
   string filename_output = ss_output.str();
