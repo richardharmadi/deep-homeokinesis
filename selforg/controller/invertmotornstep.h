@@ -164,6 +164,7 @@ public:
   void setYbuffer(int idx,matrix::Matrix yupdate);
   void setXbuffer(int idx,matrix::Matrix xupdate);
   void setXbufferUpdate(int idx,matrix::Matrix xupdate);
+
 protected:
   unsigned short number_sensors;
   unsigned short number_motors;

@@ -131,7 +131,7 @@ void StackInvertMotorNStep::updateMotorValue(int layernumber, motor* y_){ // top
 void StackInvertMotorNStep::updateSensorValue(int layernumber, motor* y_){ // top down control mode, update previous layer input with next layer virtual input (== prediction input produced by next layer output, averaged)
   int n = controllers[layernumber]->getStepCounter(); // get number of step
   matrix::Matrix yupdate (number_motors,1,y_);
-  matrix::Matrix xbuffer = controllers[layernumber-1]->setXbufferUpdate((n % buffersize),yupdate);
+  controllers[layernumber-1]->setXbufferUpdate((n % buffersize),yupdate);
 }
 vector<sensor> StackInvertMotorNStep::getPredInputFromLayer(int layernumber){
   return pred_x[layernumber]; 
