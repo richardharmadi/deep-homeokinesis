@@ -38,7 +38,7 @@ void sinerobot(double param, double* sensors, int sensornumber, const double* mo
   sensors[1]=motors[1]+(double(rand())/RAND_MAX-0.5)*0.3;
 }
 
-void zerorobot(double param, double* sensors, int sensornumber, const double* motors, int motornumber){
+void zerorobot(double* sensors, int sensornumber, const double* motors, int motornumber){
   assert(sensornumber >= 2 && motornumber >= 2); // check dimensions
   //the robot consits here just of a bit noise
   sensors[0]=(double(rand())/RAND_MAX-0.5)*0.0;
@@ -52,13 +52,16 @@ void noiserobot(double* sensors, int sensornumber, const double* motors, int mot
   sensors[1]=(double(rand())/RAND_MAX-0.5)*0.3;
 }
 int main(){
-  // ---------- 2 layers ---------------------//
-  // inputvalue.open("top-down_sinewave_2layers_input.csv");
-  // outputvalue.open("top-down_sinewave_2layers_output.csv");
+  //---------- 1 layer (baseline) -----------//
+  inputvalue.open("top-down_1layer_input.csv");
+  // outputvalue.open("top-down_zero1layer_output.csv");
+  //---------- 2 layers ---------------------//
+  // inputvalue.open("top-down_zero2layers_input.csv");
+  // outputvalue.open("top-down_zero2layers_output.csv");
 
   // ---------- 3 layers ---------------------//
-  inputvalue.open("top-down_sinewave3layers_input_rateA001-Ce3.csv");
-  outputvalue.open("top-down_sinewave3layers_outputrateA001-Ce3.csv");
+  // inputvalue.open("top-down_noise3layers_input_rateA001-Ce3.csv");
+  // outputvalue.open("top-down_noise3layers_outputrateA001-Ce3.csv");
   
   // ---------- 5 layers --------------------//
   // inputvalue.open("top-down_5layers_input.csv");
@@ -66,16 +69,16 @@ int main(){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,10); // initialise with buffer size 50 and 2 layers
   
-  // ---------- 2 layers ---------------------//
+  // ---------- 1 layer ----------------------//
   InvertMotorNStep* controller0 = new InvertMotorNStep();
-  InvertMotorNStep* controller1 = new InvertMotorNStep();
-
   main_controller->addLayer(controller0);
-  main_controller->addLayer(controller1);
+  // ---------- 2 layers ---------------------//
+  // InvertMotorNStep* controller1 = new InvertMotorNStep();
+  // main_controller->addLayer(controller1);
   // ---------- 3 layers ---------------------//
-  InvertMotorNStep* controller2 = new InvertMotorNStep();
+  // InvertMotorNStep* controller2 = new InvertMotorNStep();
 
-  main_controller->addLayer(controller2); 
+  // main_controller->addLayer(controller2); 
   // ---------- 5 layers ---------------------//
   // InvertMotorNStep* controller3 = new InvertMotorNStep();
   // InvertMotorNStep* controller4 = new InvertMotorNStep();
@@ -98,17 +101,17 @@ int main(){
   
   main_controller->init(2,2); // initialise with 2 motors and 2 sensors
 
-  controller0->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
-  controller1->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
-  controller2->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+  // controller0->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+  // controller1->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+  // controller2->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
   // controller3->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
   // controller4->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
   //controller->print(stderr,0); // print parameters (see Configurable) to stderr
 
 
-  controller0->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
-  controller1->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
-  controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+  // controller0->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+  // controller1->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+  // controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
   // controller3->setParam("epsC",5.0e-4); // set parameter epsA (learning rate for Model A)
   // controller4->setParam("epsC",5.0e-4); // set parameter epsA (learning rate for Model A)
 
@@ -126,7 +129,7 @@ int main(){
   // outputvalue << "Sensor X1,Motor Y1,\n";
 
   // ---------- 3 layers ---------------------//
-  outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,\n";
+  // outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,\n";
 
   // ---------- 5 layers ---------------------//
   // outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,Sensor X3,Motor Y3, Sensor X4,Motor Y4,\n";
@@ -137,8 +140,8 @@ int main(){
   // the robot is here respresented by the function myrobot
   for(int i=0; i < 1000; i++){
     // call robot with motors and receive sensors 
-    //myrobot(sensors, SNumber, motors, MNumber);
-    sinerobot(i,sensors,SNumber,motors,MNumber);
+    myrobot(sensors, SNumber, motors, MNumber);
+    // sinerobot(i,sensors,SNumber,motors,MNumber);
     cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
     inputvalue << sensors[0] << ",";
     /*
@@ -164,10 +167,10 @@ int main(){
           nextmotor[j] = main_controller->getAvgOutputFromLayer(j);
         }
       }
-      cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
-      cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
-      cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1] << endl;
-      cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1] << endl;
+      // cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
+      // cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
+      // cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1] << endl;
+      // cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1] << endl;
       // cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1] << endl;
       // cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1] <<endl;   
       // cout << i << " Sensor X4: " << nextsensor[3][0] << ", " << nextsensor[3][1] <<endl;
@@ -186,8 +189,8 @@ int main(){
       
       // outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ",\n"; // for 2 layers purpose
 
-      outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 3 layers purpose
-      outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ",\n"; 
+      // outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 3 layers purpose
+      // outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ",\n"; 
 
       // outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 5 layers purpose
       // outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ","; 
@@ -207,11 +210,11 @@ int main(){
   }
   delete main_controller;
   delete controller0;
-  delete controller1;
-  delete controller2;
+  // delete controller1;
+  // delete controller2;
   // delete controller3;
   // delete controller4;
   inputvalue.close();
-  outputvalue.close();
+  // outputvalue.close();
   return 0;
 }
