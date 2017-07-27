@@ -89,17 +89,17 @@ int main(int argc, char* argv[]){
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,10); // initialise with buffer size 50 and 2 layers
 
-  if(argv[1]=="1"){
+  if(strcmp(argv[1],"1")==0){
     // ---------- 1 layer ----------------------//
     InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
-  }else if(argv[1]=="2"){
+  }else if(strcmp(argv[1],"2")==0){
     // ---------- 2 layers ---------------------//
     InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
     InvertMotorNStep* controller1 = new InvertMotorNStep();
     main_controller->addLayer(controller1);
-  }else if(argv[1]=="3"){
+  }else if(strcmp(argv[1],"3")==0){
     // ---------- 3 layers ---------------------//
     InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
     controller0->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
     controller1->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
     controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
-  }else if(argv[1]=="5"){
+  }else if(strcmp(argv[1],"5")==0){
     // ---------- 5 layers ---------------------//
     InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
@@ -142,11 +142,11 @@ int main(int argc, char* argv[]){
   memset(motors,0,sizeof(double)*MNumber);  // clear motors
   inputvalue << "Sensor X0,Motor Y0,\n";
 
-  if(argv[1]=="2"){
-    outputvalue << "Sensor X1,Motor Y1,\n";
-  }else if(argv[1]=="3"){
+  if(strcmp(argv[1],"2")==0){
+    outputivalue << "Sensor X1,Motor Y1,\n";
+  }else if(strcmp(argv[1],"3")==0){
     outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,\n";
-  }else if(argv[1]=="5"){
+  }else if(strcmp(argv[1],"5")==0){
     outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,Sensor X3,Motor Y3, Sensor X4,Motor Y4,\n";
   }
   // ---------- 10 layers ---------------------//
@@ -155,16 +155,16 @@ int main(int argc, char* argv[]){
   // the robot is here respresented by the function myrobot
   for(int i=0; i < 1000; i++){
     // call robot with motors and receive sensors
-    if(argv[2]=="zero"){
+    if(strcmp(argv[2],"zero")==0){
       zerorobot(sensors,SNumber,motors,MNumber);
-    }else if(argv[2]=="noise"){
+    }else if(strcmp(argv[2],"noise")==0){
       noiserobot(sensors,SNumber,motors,MNumber);
-    }else if(argv[2]=="sinewave"){
+    }else if(strcmp(argv[2],"sinewave")==0){
       sinerobot(i,sensors,SNumber,motors,MNumber);
-    }else if(argv[2]=="normal"){
+    }else if(strcmp(argv[2],"normal")==0){
       myrobot(sensors,SNumber,motors,MNumber);
     }
-    cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
+    // cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
     inputvalue << sensors[0] << ",";
     /*
     // print some internal parameters of the controller
@@ -176,7 +176,7 @@ int main(int argc, char* argv[]){
  
     // call controller with sensors and receive motors (both dimension 2)    
     main_controller->step(sensors, SNumber, motors, MNumber); 
-    cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
+    // cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
     inputvalue << motors[0] << ",\n";
 
     if(i>buffersize){
@@ -208,12 +208,12 @@ int main(int argc, char* argv[]){
       // cout << i << " Motor Y8: " << nextmotor[7][0] << ", " << nextmotor[7][1];   
       // cout << i << " Sensor X9: " << nextsensor[8][0] << ", " << nextsensor[8][1];
       // cout << i << " Motor Y9: " << nextmotor[8][0] << ", " << nextmotor[8][1];   
-      if(argv[1]=="2"){
+      if(strcmp(argv[1],"2")==0){
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ",\n"; // for 2 layers purpose
-      }else if(argv[1]=="3"){
+      }else if(strcmp(argv[1],"3")==0){
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 3 layers purpose
         outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ",\n"; 
-      }else if(argv[1]=="5"){
+      }else if(strcmp(argv[1],"5")==0){
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 5 layers purpose
         outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ","; 
         outputvalue << nextsensor[2][0] << "," << nextmotor[2][0] << ","; 
@@ -231,16 +231,16 @@ int main(int argc, char* argv[]){
     }
   }
   delete main_controller;
-  if(argv[1]=="1"){
+  if(strcmp(argv[1],"1")==0){
     delete controller0;
-  }else if(argv[1]=="2"){
+  }else if(strcmp(argv[1],"2")==0){
     delete controller0;
     delete controller1;
-  }else if(argv[1]=="3"){
+  }else if(strcmp(argv[1],"3")==0){
     delete controller0;
     delete controller1;
     delete controller2;
-  }else if(argv[1]=="5"){
+  }else if(strcmp(argv[1],"5")==0){
     delete controller0;
     delete controller1;
     delete controller2;
