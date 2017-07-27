@@ -143,7 +143,7 @@ int main(int argc, char* argv[]){
   inputvalue << "Sensor X0,Motor Y0,\n";
 
   if(strcmp(argv[1],"2")==0){
-    outputivalue << "Sensor X1,Motor Y1,\n";
+    outputvalue << "Sensor X1,Motor Y1,\n";
   }else if(strcmp(argv[1],"3")==0){
     outputvalue << "Sensor X1,Motor Y1,Sensor X2,Motor Y2,\n";
   }else if(strcmp(argv[1],"5")==0){
