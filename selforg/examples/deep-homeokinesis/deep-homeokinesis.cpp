@@ -88,24 +88,22 @@ int main(int argc, char* argv[]){
   // outputvalue.open("top-down_5layers_output.csv");
 
   StackInvertMotorNStep* main_controller = new StackInvertMotorNStep(buffersize,10); // initialise with buffer size 50 and 2 layers
-
+  InvertMotorNStep* controller0 = new InvertMotorNStep();
+  InvertMotorNStep* controller1 = new InvertMotorNStep();
+  InvertMotorNStep* controller2 = new InvertMotorNStep();
+  InvertMotorNStep* controller3 = new InvertMotorNStep();
+  InvertMotorNStep* controller4 = new InvertMotorNStep();
   if(strcmp(argv[1],"1")==0){
     // ---------- 1 layer ----------------------//
-    InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
   }else if(strcmp(argv[1],"2")==0){
     // ---------- 2 layers ---------------------//
-    InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
-    InvertMotorNStep* controller1 = new InvertMotorNStep();
     main_controller->addLayer(controller1);
   }else if(strcmp(argv[1],"3")==0){
     // ---------- 3 layers ---------------------//
-    InvertMotorNStep* controller0 = new InvertMotorNStep();
     main_controller->addLayer(controller0);
-    InvertMotorNStep* controller1 = new InvertMotorNStep();
     main_controller->addLayer(controller1);
-    InvertMotorNStep* controller2 = new InvertMotorNStep();
     main_controller->addLayer(controller2);
 
     controller0->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
@@ -117,15 +115,9 @@ int main(int argc, char* argv[]){
     controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
   }else if(strcmp(argv[1],"5")==0){
     // ---------- 5 layers ---------------------//
-    InvertMotorNStep* controller0 = new InvertMotorNStep();
-    main_controller->addLayer(controller0);
-    InvertMotorNStep* controller1 = new InvertMotorNStep();
     main_controller->addLayer(controller1);
-    InvertMotorNStep* controller2 = new InvertMotorNStep();
     main_controller->addLayer(controller2); 
-    InvertMotorNStep* controller3 = new InvertMotorNStep();
     main_controller->addLayer(controller3);
-    InvertMotorNStep* controller4 = new InvertMotorNStep();
     main_controller->addLayer(controller4);
   }
   
