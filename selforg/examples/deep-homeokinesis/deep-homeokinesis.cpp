@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
     }else if(strcmp(argv[2],"normal")==0){
       myrobot(sensors,SNumber,motors,MNumber);
     }
-    // cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
+    cout << i << " Sensor X0: " << sensors[0] << ", " << sensors[1] << endl;
     inputvalue << sensors[0] << ",";
     /*
     // print some internal parameters of the controller
@@ -168,7 +168,7 @@ int main(int argc, char* argv[]){
  
     // call controller with sensors and receive motors (both dimension 2)    
     main_controller->step(sensors, SNumber, motors, MNumber); 
-    // cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
+    cout << i << " Motor Y0: " << motors[0] << ", " << motors[1] << endl;
     inputvalue << motors[0] << ",\n";
 
     if(i>buffersize){
@@ -180,15 +180,7 @@ int main(int argc, char* argv[]){
           nextsensor[j] = main_controller->getInvInputFromLayer(j);
           nextmotor[j] = main_controller->getAvgOutputFromLayer(j);
         }
-      }
-      // cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
-      // cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
-      // cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1] << endl;
-      // cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1] << endl;
-      // cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1] << endl;
-      // cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1] <<endl;   
-      // cout << i << " Sensor X4: " << nextsensor[3][0] << ", " << nextsensor[3][1] <<endl;
-      // cout << i << " Motor Y4: " << nextmotor[3][0] << ", " << nextmotor[3][1]<< endl;   
+      }  
 
       // cout << i << " Sensor X5: " << nextsensor[4][0] << ", " << nextsensor[4][1] << endl;
       // cout << i << " Motor Y5: " << nextmotor[4][0] << ", " << nextmotor[4][1] << endl;
@@ -201,11 +193,25 @@ int main(int argc, char* argv[]){
       // cout << i << " Sensor X9: " << nextsensor[8][0] << ", " << nextsensor[8][1];
       // cout << i << " Motor Y9: " << nextmotor[8][0] << ", " << nextmotor[8][1];   
       if(strcmp(argv[1],"2")==0){
+        cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
+        cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ",\n"; // for 2 layers purpose
       }else if(strcmp(argv[1],"3")==0){
+        cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
+        cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
+        cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1] << endl;
+        cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1] << endl;
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 3 layers purpose
         outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ",\n"; 
       }else if(strcmp(argv[1],"5")==0){
+        cout << i << " Sensor X1: " << nextsensor[0][0] << ", " << nextsensor[0][1] << endl;
+        cout << i << " Motor Y1: " << nextmotor[0][0] << ", " << nextmotor[0][1] << endl;
+        cout << i << " Sensor X2: " << nextsensor[1][0] << ", " << nextsensor[1][1] << endl;
+        cout << i << " Motor Y2: " << nextmotor[1][0] << ", " << nextmotor[1][1] << endl;
+        cout << i << " Sensor X3: " << nextsensor[2][0] << ", " << nextsensor[2][1] << endl;
+        cout << i << " Motor Y3: " << nextmotor[2][0] << ", " << nextmotor[2][1] <<endl;   
+        cout << i << " Sensor X4: " << nextsensor[3][0] << ", " << nextsensor[3][1] <<endl;
+        cout << i << " Motor Y4: " << nextmotor[3][0] << ", " << nextmotor[3][1]<< endl; 
         outputvalue << nextsensor[0][0] << "," << nextmotor[0][0] << ","; // for 5 layers purpose
         outputvalue << nextsensor[1][0] << "," << nextmotor[1][0] << ","; 
         outputvalue << nextsensor[2][0] << "," << nextmotor[2][0] << ","; 
