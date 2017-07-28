@@ -106,15 +106,16 @@ int main(int argc, char* argv[]){
     main_controller->addLayer(controller1);
     main_controller->addLayer(controller2);
 
-    controller0->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
-    controller1->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
-    controller2->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+   //controller0->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+    //controller1->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
+    //controller2->setParam("epsA",0.01); // set parameter epsA (learning rate for Model A)
     
-    controller0->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
-    controller1->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
-    controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+    //controller0->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+    //controller1->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
+    //controller2->setParam("epsC",1.0e-3); // set parameter epsA (learning rate for Model A)
   }else if(strcmp(argv[1],"5")==0){
     // ---------- 5 layers ---------------------//
+    main_controller->addLayer(controller0);
     main_controller->addLayer(controller1);
     main_controller->addLayer(controller2); 
     main_controller->addLayer(controller3);
