@@ -1,84 +1,86 @@
-/***************************************************************************
- *   Copyright (C) 2005-2011 by                                            *
- *    Georg Martius  <georg dot martius at web dot de>                     *
- *    Frank Hesse    <frank at nld dot ds dot mpg dot de>                  *
- *    Ralf Der       <ralfder at mis dot mpg dot de>                       *
- *                                                                         *
- *   ANY COMMERCIAL USE FORBIDDEN!                                         *
- *   LICENSE:                                                              *
- *   This work is licensed under the Creative Commons                      *
- *   Attribution-NonCommercial-ShareAlike 2.5 License. To view a copy of   *
- *   this license, visit http://creativecommons.org/licenses/by-nc-sa/2.5/ *
- *   or send a letter to Creative Commons, 543 Howard Street, 5th Floor,   *
- *   San Francisco, California, 94105, USA.                                *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
- *                                                                         *
- ***************************************************************************/
+#include "stackcontroller.h"
+#include <selforg/controller/regularisation.h>
+#include <iostream>
+#include <vector>
 
-#include "invertmotornstep.h"
-#include "regularisation.h"
 using namespace matrix;
 using namespace std;
 
-InvertMotorNStep::InvertMotorNStep( const InvertMotorNStepConf& conf)
-    : InvertMotorController(conf.buffersize, "InvertMotorNStep", "$Id$"), conf(conf)
-{
+StackController::StackController( const StackControllerConf& conf)
+  : InvertMotorController(conf.buffersize, "StackController", "$Id$"),conf(conf){
+  vector<matrix::Matrix> A; // vector of Model Matrix (motors to sensors)
+  vector<matrix::Matrix> C; // vector of Controller Matrix
+  vector<matrix::Matrix> H; // vector of Controller Bias
+  vector<matrix::Matrix> B; ///< Model Bias
+  vector<matrix::Matrix> R; ///< C*A
+  matrix::Matrix SmallID; ///< small identity matrix in the dimension of R
+  matrix::Matrix xsi; ///< current output error
+  matrix::Matrix v;   ///< current reconstructed error
+  matrix::Matrix* x_buffer;
+  matrix::Matrix* y_buffer;
+  matrix::Matrix* eta_buffer;
+  matrix::Matrix zero_eta; // zero initialised eta
+  matrix::Matrix x_smooth;
+  matrix::Matrix y_teaching; ///< teaching motor signal
+  matrix::Matrix sensorweights; ///< sensor channel weight (each channel gets a certain importance)
 
-  addParameterDef("inhibition",&inhibition,0);
-  addParameterDef("kwta",&kwta,2);
-  addParameterDef("limitrf",&limitRF,0);
-  addParameterDef("dampS",&dampS,0);
-  addParameterDef("dampC",&dampC,0);
-  addParameterDef("noiseY",&noiseY,0);
-  addParameterDef("modelcompl",&modelCompliant,0);
-  addParameterDef("continuity",&continuity,0);
-  addParameterDef("activeexpl",&activeExplore,0);
-  // Georg: remove because special case: make a copy to the precise simulation!
-  addParameterDef("cfactor",&cfactor,1);
-  addParameterDef("cnondiagabs",&cnondiagabs,0);
-  addParameterDef("cdiagabs",&cdiagabs,0);
+  // memory reservation for vectors to avoid reallocation (max elements or layer in the deep networks is 10)
+  A.reserve(5);
+  C.reserve(5);
+  H.reserve(5);
+  B.reserve(5);
+  R.reserve(5);
 
-  managementInterval=10;
-  useTeaching=false;
-  reinforcement=0;
-  E_val=0;
-  reinforcefactor=0;
-  BNoiseGen = 0;
-  YNoiseGen = 0;
+  for (int i=0;i<conf.nlayers;i++){
+    A.push_back(Matrix()); // add new zero matrix as an element in the vector
+    C.push_back(Matrix());
+    R.push_back(Matrix());
+    H.push_back(Matrix());
+    B.push_back(Matrix());
 
-  x_buffer = 0;
-  y_buffer = 0;
-  eta_buffer = 0;
+    addInspectableMatrix("A"+to_string(i),&A[i],conf.someInternalParams, "model matrix"+to_string(i));
+    addInspectableMatrix("C"+to_string(i),&A[i],conf.someInternalParams,"controller matrix"+to_string(i));
+    addInspectableMatrix("R"+to_string(i), &R[i], conf.someInternalParams, "linear Response matrix"+to_string(i));
+    addInspectableMatrix("H"+to_string(i), &H[i], false, "controller bias"+to_string(i));
+    addInspectableMatrix("B"+to_string(i), &B[i], false, "model bias"+to_string(i));
 
-  addInspectableMatrix("A", &A, conf.someInternalParams, "model matrix");
+    if(!conf.someInternalParams){
+      addInspectableMatrix("yteach"+to_string(i), &y_teaching[i], false, "motor teaching signal"+to_string(i));
+      addInspectableMatrix("xsi"+to_string(i), &xsi[i], false, "prediction error"+to_string(i));
+      addInspectableMatrix("v"+to_string(i), &v[i], false, "postdiction error"+to_string(i));
+    }
+
+    addInspectableValue("epsA", &epsA, "learning rate of the Model");
+    addInspectableValue("epsC", &epsC, "learning rate of the Controller");
+    addInspectableValue("xsi_norm", &xsi_norm, "1-norm of prediction error");
+    addInspectableValue("xsi_norm_avg", &xsi_norm_avg, "averaged 1-norm of prediction error");
+    addInspectableValue("E", &E_val, "value of error function");
+  }
+  /*
   if(conf.useS)
     addInspectableMatrix("S", &S, conf.someInternalParams, "extended Model matrix");
   if(conf.useSD)
     addInspectableMatrix("SD", &SD, conf.someInternalParams, "extended Model matrix (deriv)");
-
-  addInspectableMatrix("C", &C, conf.someInternalParams, "controller matrix");
-  addInspectableMatrix("R", &R, conf.someInternalParams, "linear Response matrix");
-  addInspectableMatrix("H", &H, false, "controller bias");
-  addInspectableMatrix("B", &B, false, "model bias");
-  if(!conf.someInternalParams){
-    addInspectableMatrix("yteach", &y_teaching, false, "motor teaching signal");
-    addInspectableMatrix("xsi", &xsi, false, "prediction error");
-    addInspectableMatrix("v", &v, false, "postdiction error");
-  }
-  addInspectableValue("epsA", &epsA, "learning rate of the Model");
-  addInspectableValue("epsC", &epsC, "learning rate of the Controller");
-  addInspectableValue("xsi_norm", &xsi_norm, "1-norm of prediction error");
-  addInspectableValue("xsi_norm_avg", &xsi_norm_avg, "averaged 1-norm of prediction error");
-  addInspectableValue("E", &E_val, "value of error function");
+  
   addInspectableValue("pain", &pain, "internal pain signal");
   addInspectableValue("reinforce", &reinforcement, "reward value");
+
+  managementInterval=10;
+  useTeaching=false;
+  reinforcement=0;
+  reinforcefactor=0;
+  */
+  E_val=0;
+  BNoiseGen = 0;
+  YNoiseGen = 0;
+  
+  x_buffer = 0;
+  y_buffer = 0;
+  eta_buffer = 0;
+  
 };
 
-
-InvertMotorNStep::~InvertMotorNStep()
+StackController::~StackController()
 {
   if(x_buffer && y_buffer && eta_buffer)
   {
@@ -90,23 +92,54 @@ InvertMotorNStep::~InvertMotorNStep()
   if(YNoiseGen) delete YNoiseGen;
 }
 
+bool StackController::store(FILE* f) const
+{
+  for(int i=0;i<conf.nlayers;i++){
+    // save matrix values
+    C[i].store(f);
+    H[i].store(f);
+    A[i].store(f);
+    B[i].store(f);
+    //if(conf.useS) S.store(f);
+    //if(conf.useSD) SD.store(f);
+    Configurable::print(f,0);  
+  }
+  return true;
+}
 
-void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
+bool StackController::restore(FILE* f)
+{
+  for(int i=0;i<conf.nlayers;i++){
+    // save matrix values
+    C[i].restore(f);
+    H[i].restore(f);
+    A[i].restore(f);
+    B[i].restore(f);
+    //if(conf.useS) S.restore(f);
+    //if(conf.useSD) SD.restore(f);
+    Configurable::parse(f);
+    t=0; // set time to zero to ensure proper filling of buffers
+  }
+  return true; 
+}
+
+void StackController::init(int sensornumber, int motornumber, RandGen* randGen)
 {
   assert(sensornumber>=motornumber);
   if(!randGen) randGen = new RandGen(); // this gives a small memory leak
 
   number_motors  = motornumber;
   number_sensors = sensornumber;
-  if(conf.numberContext == 0) // we just declare all sensors as context
-    conf.numberContext = number_sensors;
+  //if(conf.numberContext == 0) // we just declare all sensors as context
+      //conf.numberContext = number_sensors;
 
+  // --- richad : put for loop here for vector initialization
   //  z.set(number_motors,1);
   A.set(number_sensors, number_motors);
   // S gets context sensors
-  if (conf.useS) S.set(number_sensors, conf.numberContext);
+  // if (conf.useS) S.set(number_sensors, conf.numberContext);
   // S gets first and second derivative of context sensors
-  if (conf.useSD) SD.set(number_sensors, number_sensors*2);
+  //if (conf.useSD) SD.set(number_sensors, number_sensors*2);
   C.set(number_motors,  number_sensors);
   H.set(number_motors,  1);
   B.set(number_sensors, 1);
@@ -128,14 +161,15 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   //  YNoiseGen = new WhiteUniformNoise();
   YNoiseGen->init(number_motors);
 
+  //-- richad : put another for loop here
   A.toId(); // set A to identity matrix;
   //  if (conf.useS) S.mapP(randGen, random_minusone_to_one)*0.01; // set S to small random matrix;
   // if (conf.useSD) S.mapP(randGen, random_minusone_to_one)*0.01; // set SD to small random matrix;
 
-  if(conf.initialC.getM() != number_motors || conf.initialC.getN() != number_sensors){
+  if(conf.initialC.getM() != number_motors || conf.initialC.getN() != number_sensors ){
     if(!conf.initialC.isNulltimesNull()) cerr << "dimension of Init C are not correct, default is used! \n";
-    //initialise the C matrix with identity +noise scaled to cInit value
-    C= ((C^0) + C.mapP(randGen, random_minusone_to_one) * conf.cNonDiag) * conf.cInit;
+    // initialise the C matrix with identity + noise scaled to cInit value
+    C = ((C^0) + C.mapP(randGen, random_minusone_to_one) * conf.cNonDiag) * conf.cInit;
   }else{
     C=conf.initialC; // use given matrix
   }
@@ -158,7 +192,7 @@ void InvertMotorNStep::init(int sensornumber, int motornumber, RandGen* randGen)
   t_rand = int(randGen->rand()*10);
   initialised = true;
 }
-
+/*
 /// performs one step (includes learning). Calculates motor commands from sensor inputs.
 void InvertMotorNStep::step(const sensor* x_, int number_sensors,
                             motor* y_, int number_motors)
@@ -177,7 +211,6 @@ void InvertMotorNStep::step(const sensor* x_, int number_sensors,
   }
   // update step counter
   t++;
-  step_counter = t;
 
 //   // Georg: This a very special case. Should be removed! Make a copy to the precise simulation
   if (cfactor!=1)
@@ -204,7 +237,6 @@ void InvertMotorNStep::stepNoLearning(const sensor* x, int number_sensors,
   fillBuffersAndControl(x, number_sensors, y, number_motors);
   // update step counter
   t++;
-  step_counter = t;
 };
 
 void InvertMotorNStep::fillBuffersAndControl(const sensor* x_, int number_sensors,
@@ -246,6 +278,7 @@ void InvertMotorNStep::fillBuffersAndControl(const sensor* x_, int number_sensor
   y.convertToBuffer(y_, number_motors);
 }
 
+
 double InvertMotorNStep::regularizedInverse(double v)
 {
   return 1/(fabs(v)+0.1);
@@ -255,7 +288,7 @@ double InvertMotorNStep::regularizedInverse(double v)
 //  @param delay 0 for no delay and n>0 for n timesteps delay in the SML
 void InvertMotorNStep::calcEtaAndBufferIt(int delay)
 {
-  // eta = A^-1 xsi (first shift in motor-space at current time)
+  // eta = A[1]^-1 xsi (first shift in motor-space at current time)
   //
   // Georg: a comment to the pseudoinverse: This does not quite give
   //  the right result in case of rectangular matrix. Consider:
@@ -268,7 +301,7 @@ void InvertMotorNStep::calcEtaAndBufferIt(int delay)
   //  For rectangular matrices it is better to use A^{-1} = (A + \lambda I)^{-1}
 
   // We use pseudoinverse U=A^T A -> eta = U^-1 A^T xsi // TODO add 0.01*I
-  Matrix eta = (A.multTM()^-1) * ( (A^T) * xsi );
+  Matrix eta = (A[1].multTM()^-1) * ( (A[1]^T) * xsi );
 
   // new 18.10.2007 by Georg
   // squash eta
@@ -290,16 +323,16 @@ void InvertMotorNStep::calcXsi(int delay)
   const Matrix& x     = x_buffer[t% buffersize];
   const Matrix& y     = y_buffer[(t - 1 - delay) % buffersize];
   //  xsi = (x -  model(x_buffer, 1 , y));
-  xpred = model(x_buffer,1,y); // new Richard 03.07.2017
   xsi = (x -  model(x_buffer, 1 , y)).multrowwise(sensorweights); // new Georg 18.10.2007
   //  xsi_norm = matrixNorm1(xsi);
   xsi_norm = xsi.multTM().val(0,0);
 }
 
+
 /// calculates the predicted sensor values
 Matrix InvertMotorNStep::model(const Matrix* x_buffer, int delay, const matrix::Matrix& y)
 {
-  Matrix xp = A * y + B;
+  Matrix xp = A[1] * y + B;
   if(conf.useS)
   {
     const Matrix& x_c = x_buffer[(t-delay)% buffersize].rows(number_sensors - conf.numberContext,number_sensors - 1);
@@ -369,7 +402,7 @@ void InvertMotorNStep::calcCandHUpdates(Matrix& C_update, Matrix& H_update, int 
     const Matrix g_2p_div_p  = Matrix::map2(g_ss_div_s, z, shift);
 
     const Matrix zeta = shift.multrowwise(g_prime_inv); // G'(Z)^-1 * (eta+v)
-    R                 = C * A;
+    R                 = C * A[1];
     // Georg 09.10.2008: consider to use different pseudoinverse: (R+\lambda I)^-1
     const Matrix chi  = (((R.multMT()+SmallID)^-1) * zeta);
     v                 = ((R^T) * chi).mapP(&shiftlimit,squash);// limit by shiftlimit // New Georg 10.2007;
@@ -465,13 +498,13 @@ void InvertMotorNStep::calcCandHUpdatesTeaching(Matrix& C_update, Matrix& H_upda
   const Matrix g_prime     = Matrix::map2(g_s, z, eta);
   const Matrix g_prime_inv = g_prime.map(one_over);
   const Matrix g_2p_div_p  = Matrix::map2(g_ss_div_s, z, eta);
-  R = C * A;
+  R = C * A[1];
   const Matrix zeta = eta.multrowwise(g_prime_inv);
   const Matrix chi = (R.multMT()^-1) * zeta;
   const Matrix v   = ((R + SmallID)^-1) * zeta;
 
   const Matrix rho = chi.multrowwise(zeta).multrowwise(g_2p_div_p) * -1;
-  C_update = (chi * (v^T) * (A^T) + (chi*teacher - rho)*(x^T)) * epsC * 0.1;
+  C_update = (chi * (v^T) * (A[1]^T) + (chi*teacher - rho)*(x^T)) * epsC * 0.1;
   H_update = (chi*teacher - rho) * epsC * 0.1;
 
   //  we use error_factor of 1 for teaching
@@ -531,12 +564,12 @@ void InvertMotorNStep::learnModel(int delay)
 
     if(adaptRate!=0)
     {
-      double normA = matrixNorm1(A);
+      double normA = matrixNorm1(A[1]);
       epsA=adaptMinMax(epsA, matrixNorm1(A_update) , normA/2500, normA/250, adaptRate, adaptRate*5);
       epsA = min( 2.0, epsA);
     }
 
-    A += A_update.mapP(&squashSize, squash);
+    A[1] += A_update.mapP(&squashSize, squash);
     B += B_update.mapP(&squashSize, squash);
   }
 };
@@ -585,7 +618,7 @@ void InvertMotorNStep::management()
 {
   if(dampA)
   {
-    A *= 1 - dampA * managementInterval;
+    A[1] *= 1 - dampA * managementInterval;
     B *= 1 - dampA * managementInterval;
   }
   if(dampS)
@@ -639,34 +672,6 @@ void InvertMotorNStep::limitC(matrix::Matrix& wm, unsigned int rfSize)
   }
 }
 
-
-bool InvertMotorNStep::store(FILE* f) const
-{
-  // save matrix values
-  C.store(f);
-  H.store(f);
-  A.store(f);
-  B.store(f);
-  if(conf.useS) S.store(f);
-  if(conf.useSD) SD.store(f);
-  Configurable::print(f,0);
-  return true;
-}
-
-bool InvertMotorNStep::restore(FILE* f)
-{
-  // save matrix values
-  C.restore(f);
-  H.restore(f);
-  A.restore(f);
-  B.restore(f);
-  if(conf.useS) S.restore(f);
-  if(conf.useSD) SD.restore(f);
-  Configurable::parse(f);
-  t=0; // set time to zero to ensure proper filling of buffers
-  return true;
-}
-
 list<Inspectable::ILayer> InvertMotorNStep::getStructuralLayers() const
 {
   list<Inspectable::ILayer> l;
@@ -703,7 +708,7 @@ void InvertMotorNStep::setSensorTeachingSignal(const sensor* teaching, int len)
   assert(len == number_sensors);
   Matrix x_teaching(len,1,teaching);
   // calculate the y_teaching, that belongs to the distal teaching value by the inverse model.
-  y_teaching = (A.multTM()^(-1)) *  ((A^T) * (x_teaching-B)) ;
+  y_teaching = (A[1].multTM()^(-1)) *  ((A[1]^T) * (x_teaching-B)) ;
   y_teaching.toMap(clip095);
   useTeaching=true;
 }
@@ -724,7 +729,7 @@ void InvertMotorNStep::setMotorTeaching(const matrix::Matrix& teaching){
 void InvertMotorNStep::setSensorTeaching(const matrix::Matrix& teaching){
   assert(teaching.getM() == number_sensors && teaching.getN() == 1);
   // calculate the y_teaching, that belongs to the distal teaching value by the inverse model.
-  y_teaching = (A.pseudoInverse(0.001) * (teaching-B)).mapP(0.95, clip);
+  y_teaching = (A[1].pseudoInverse(0.001) * (teaching-B)).mapP(0.95, clip);
   useTeaching=true;
 }
 
@@ -741,77 +746,4 @@ void InvertMotorNStep::setReinforcement(double reinforcement)
 {
   this->reinforcement= tanh(reinforcement);
   this->reinforcefactor = 1-0.99*this->reinforcement;
-}
-
-void InvertMotorNStep::getPredSensorValue(sensor* xpred_){
-  xpred.convertToBuffer(xpred_,number_sensors);
-}
-
-void InvertMotorNStep::getInvMotorValue(motor* yinv_){
-  yinv = getLastMotorValues() - eta_buffer[(t-1)%buffersize];
-  yinv.convertToBuffer(yinv_,number_motors);
-}
-
-void InvertMotorNStep::getInvSensorValue(sensor* xinv_){
-  Matrix Cinv = (C.multTM()^-1) * (C^T); //using Moore-Penrose pseudoinverse so we do not have to make sure the matrix is invertible
-  Matrix yprime = yinv.map(ginv); //tanh-1(invert output)
-  Matrix result = Cinv * yprime;
-  result.convertToBuffer(xinv_,number_sensors);
-}
-
-void InvertMotorNStep::stepNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
-  fillBuffersAndControlNextLayer(x_,number_sensors,y_,number_motors,yinv);
-  if (step_counter>buffersize){
-    int delay = max(int(s4delay)-1,0);
-    calcXsi(delay);
-    calcEtaAndBufferIt(delay);
-    learnController(delay);
-    learnModel(delay);
-  }
-  step_counter++;
-};
-
-void InvertMotorNStep::setYbuffer(int idx, matrix::Matrix yupdate){
-  y_buffer[idx] = yupdate;
-}
-
-void InvertMotorNStep::setXbuffer(int idx, matrix::Matrix xupdate){
-  x_buffer[idx] = xupdate;
-}
-
-void InvertMotorNStep::setXbufferUpdate(int idx, matrix::Matrix xupdate){
-  Matrix& x_buffer_update = xupdate; // get next layer output
-  Matrix xp = model(x_buffer,1,x_buffer_update); // feed it to this layer model
-  Matrix xbuff = getXbuffer(idx); // get current xbuffer
-  xbuff += xp; // update current buffer with the value
-  xbuff *= 0.5; //avg them
-  setXbuffer(idx, xbuff);
-}
-
-void InvertMotorNStep::fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv){
-  assert((unsigned)number_sensors== this->number_sensors && (unsigned)number_motors==this->number_motors);
-  Matrix x(number_sensors,1,x_);
-  putInBuffer(x_buffer,x);
-  x_smooth = calculateSmoothValues(x_buffer,t<s4avg?1:int(max(1.0,s4avg)));
-
-  Matrix y = calculateControllerValues(x_smooth);
-  if(noiseY!=0){
-    Matrix y_noise = noiseMatrix(y.getM(),y.getN(), *YNoiseGen, -noiseY, noiseY);
-    y += y_noise;
-  }
-  // wrong implementation of top-down control!
-  // Matrix yinvMatrix(number_motors,1,yinv);
-  // y += yinvMatrix;
-  // y *= 0.5; //averaging between new y and reconstructed y from previous layer
-
-  if (activeExplore != 0)
-    {
-      y += eta_buffer[(t-1)%buffersize]*activeExplore;
-    }
-
-  if((t+t_rand)%managementInterval==0) management();
-
-  putInBuffer(y_buffer,y);
-
-  y.convertToBuffer(y_,number_motors);
-}
+}*/

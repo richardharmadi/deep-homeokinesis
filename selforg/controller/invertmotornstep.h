@@ -11,7 +11,7 @@
  *   this license, visit http://creativecommons.org/licenses/by-nc-sa/2.5/ *
  *   or send a letter to Creative Commons, 543 Howard Street, 5th Floor,   *
  *   San Francisco, California, 94105, USA.                                *
- *                                                                         *
+ *                                                           /              *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *
@@ -26,8 +26,8 @@
 #include <assert.h>
 #include <cmath>
 
-#include <selforg/matrix.h>
-#include <selforg/noisegenerator.h>
+#include <selforg/matrix/matrix.h>
+#include <selforg/utils/noisegenerator.h>
 
 typedef struct InvertMotorNStepConf {
   int buffersize; ///< buffersize size of the time-buffer for x,y,eta
@@ -74,6 +74,7 @@ public:
   virtual void stepNoLearning(const sensor* , int number_sensors,
                               motor* , int number_motors);
 
+  virtual void stepNextLayer(sensor* , int number_sensors, motor* , int number_motors, motor* yinv);
   /**** STOREABLE ****/
   /** stores the controller values to a given file. */
   virtual bool store(FILE* f) const;
@@ -99,7 +100,12 @@ public:
   virtual void setSensorTeachingSignal(const sensor* teaching, int len);
   void getLastMotors(motor* motors, int len);
   void getLastSensors(sensor* sensors, int len);
-
+  // Richard 03.07.2017 -- get predicted sensor value from the layer
+  void getPredSensorValue(sensor* xpred_);
+  // Richard 06.07.2017 -- get inversed output from the model
+  void getInvMotorValue(motor* yinv_);
+  // Richard 06.07.2017 -- get reconstructed input
+  void getInvSensorValue(sensor* xinv_);
 
   /**** New TEACHING interface ****/
   /** The given motor teaching signal is used for this timestep.
@@ -121,8 +127,6 @@ public:
   /// returns the last sensor values (useful for cross sensor coupling)
   virtual matrix::Matrix getLastSensorValues();
 
-
-
   // UNUSED! OLD IMPLEMENTATION which hat some consistency arguments
   void calcCandHUpdatesTeaching(matrix::Matrix& C_update, matrix::Matrix& H_update, int y_delay);
 
@@ -133,8 +137,6 @@ public:
       @param reinforcement value between -1 and 1 (-1 bad, 0 neutral, 1 good)
    */
   virtual void setReinforcement(double reinforcement);
-
-
 
   static InvertMotorNStepConf getDefaultConf(){
     InvertMotorNStepConf c;
@@ -156,6 +158,12 @@ public:
   matrix::Matrix& getC(){return C;};
 
   double getE() const {return v.multTM().val(0,0);}
+  int getStepCounter() {return step_counter;}
+  matrix::Matrix getYbuffer(int idx) {return y_buffer[idx];}
+  matrix::Matrix getXbuffer(int idx) {return x_buffer[idx];}
+  void setYbuffer(int idx,matrix::Matrix yupdate);
+  void setXbuffer(int idx,matrix::Matrix xupdate);
+  void setXbufferUpdate(int idx,matrix::Matrix xupdate);
 
 protected:
   unsigned short number_sensors;
@@ -175,6 +183,8 @@ protected:
   matrix::Matrix SmallID; ///< small identity matrix in the dimension of R
   matrix::Matrix xsi; ///< current output error
   matrix::Matrix v;   ///< current reconstructed error
+  matrix::Matrix xpred; ///< current predicted sensor value
+  matrix::Matrix yinv; ///< reconstructed output from inverted model
   double E_val; ///< value of Error function
   double xsi_norm; ///< norm of matrix
   double xsi_norm_avg; ///< average norm of xsi (used to define whether Modell learns)
@@ -190,7 +200,7 @@ protected:
   double reinforcement; ///< reinforcement value (set via setReinforcement())
   double reinforcefactor; ///< reinforcement factor (set to 1 every step after learning)
   int t_rand; ///< initial random time to avoid syncronous management of all controllers
-
+  int step_counter;
   matrix::Matrix sensorweights; ///< sensor channel weight (each channel gets a certain importance)
 
   /** factor to teach for continuity: subsequent motor commands
@@ -218,6 +228,8 @@ protected:
   virtual void fillBuffersAndControl(const sensor* x_, int number_sensors,
                              motor* y_, int number_motors);
 
+  virtual void fillBuffersAndControlNextLayer(sensor* x_, int number_sensors, motor* y_, int number_motors, motor* yinv);
+
   /// calculates the first shift into the motor space useing delayed motor values.
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void calcEtaAndBufferIt(int delay);
@@ -225,7 +237,6 @@ protected:
   //  and x delayed by one
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void calcXsi(int delay);
-
   /// learn H,C with motors y and corresponding sensors x
   //  @param delay 0 for no delay and n>0 for n timesteps delay in the time loop
   virtual void learnController(int delay);

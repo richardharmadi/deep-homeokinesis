@@ -17,7 +17,7 @@ STRIP=no
 SELFORG=.
 PREFIX=$(shell ./selforg-config $(CFGOPTS) --prefix)
 # for debian auto-package installation
-ifneq ($(DESTDIR),) 
+ifneq ($(DESTDIR),)
 PREFIX=$(DESTDIR)
 endif
 include Makefile.conf
@@ -30,21 +30,23 @@ endif
 BUILD_DIR=build
 
 find_cpp_files = $(wildcard $(dir)/*.cpp)
-CPPFILES   := $(foreach dir,$(dirs),$(find_cpp_files))
+CPPFILES   := $(filter-out %flymake.cpp,$(foreach dir,$(dirs),$(find_cpp_files)))
 find_h_files = $(wildcard $(dir)/*.h)
-HFILES   := $(foreach dir,$(dirs),$(find_h_files))
+HFILES   := $(filter-out %flymake.h,$(foreach dir,$(dirs),$(find_h_files)))
 OFILES     := $(patsubst %.cpp,${BUILD_DIR}/%.o, $(CPPFILES))
+
+UTILS = selforg-config
 
 # additional inc paths
 INC +=  -I. -Iinclude -Iinclude/selforg
 
 # use -pg for profiling
-CPPFLAGS = -Wall -pipe -fpic $(INC) $(shell ./selforg-config --srcprefix="." $(CFGOPTS) --intern --cflags)
+CPPFLAGS = -Wall -pipe -fpic $(INC) -std=c++11 $(shell ./selforg-config --srcprefix="." $(CFGOPTS) --intern --cflags)
 
 # used for single file compilation
 CXX = g++
 
-# used for lib-packing 
+# used for lib-packing
 AR = ar -rcs
 
 .PHONY: lib opt dbg clean clean-all distclean todo depend tags install install_lib uninstall uninstall_lib
@@ -55,17 +57,17 @@ libs: lib opt dbg
 
 lib: $(LIB)
 
-opt: 
+opt: $(UTILS)
 	$(MAKE) BUILD_DIR=build_opt CFGOPTS=--opt STRIP="yes" lib
 
-dbg: 
+dbg: $(UTILS)
 	$(MAKE) BUILD_DIR=build_dbg CFGOPTS=--dbg lib
 
-shared:
+shared: $(UTILS)
 	$(MAKE) $(SHAREDLIB)
 
 
-$(LIB): Makefile.depend $(OFILES)
+$(LIB):  $(UTILS) Makefile.depend $(OFILES)
 	$(AR) $(LIB) $(OFILES)
 	@if [ "$(STRIP)" = "yes" ]; then strip -S $(LIB); fi
 
@@ -75,13 +77,13 @@ ${BUILD_DIR}/%.o: %.cpp
 	$(CXX) -c $(CPPFLAGS) $(CFLAGS) -o "$@" "$<"
 
 $(SHAREDLIB): Makefile.depend $(OFILES)
-	$(CXX) -shared -Wl,-soname,`basename $(SHAREDLIB)` -o $(SHAREDLIB) $(OFILES) 
+	$(CXX) -shared -Wl,-soname,`basename $(SHAREDLIB)` -o $(SHAREDLIB) $(OFILES)
 
 
 install_scripts:
 	@echo "*************** Install config script $(PREFIX)/bin *********************"
 	install -d $(PREFIX)/bin
-	install -m 755 selforg-config $(PREFIX)/bin/	
+	install -m 755 selforg-config $(PREFIX)/bin/
 
 install_lib:
 	install -m 644 $(LIB) $(PREFIX)/lib/
@@ -116,13 +118,13 @@ ifneq ($(TYPE),DEVEL)
 endif
 
 
-Makefile.depend: 
+Makefile.depend:
 	for file in $(HFILES); do \
 		ln -sf $(REVINCLUDEDIR)/$$file $(INCLUDEDIR)/; \
 	done
 	makedepend -- $(CPPFLAGS) -- $(CPPFILES) -p'$$(BUILD_DIR)/' -f- > Makefile.depend 2>/dev/null
 
-depend: 
+depend:
 	rm Makefile.depend
 	make Makefile.depend
 
@@ -130,6 +132,13 @@ depend:
 .PHONY: check-syntax
 check-syntax:
 	$(CXX) $(CPPFLAGS) -Wextra -S -fsyntax-only $(CHK_SOURCES)
+	cppcheck --std=c++11 --std=posix --enable=performance,information,portability --suppress=incorrectStringBooleanError --suppress=invalidscanf --quiet --template={file}:{line}:{severity}:{message} $(CHK_SOURCES)
+
+
+.PHONY: cppcheck
+cppcheck:
+	cppcheck --std=c++11 --std=posix --enable=performance,information,portability --suppress=incorrectStringBooleanError --suppress=invalidscanf  --quiet --template={file}:{line}:{severity}:{message} $(HFILES) $(CPPFILES)
+
 
 # Workaroud for bug in etags: filenames should not have leading ./
 CPPFILESNoDot := $(subst ./,,$(CPPFILES))
@@ -176,8 +185,11 @@ todo:
 	@grep -ni "Fixme"  $(CPPFILES) $(HFILES)
 
 
-Makefile.conf.generated: 
+Makefile.conf.generated:
 	@echo "run ./configure first!"
 	@exit 1;
+
+selforg-config: selforg-config.m4
+	$(error "call ./configure or make all in lpzrobots again!")
 
 include Makefile.depend
