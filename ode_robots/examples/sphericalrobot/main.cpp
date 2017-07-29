@@ -33,6 +33,8 @@
 // controller
 #include <selforg/invertmotorspace.h>
 #include <selforg/sinecontroller.h>
+#include <selforg/controller/invertmotornstep.h>
+#include <selforg/controller/stackinvertmotornstep.h>
 
 #include <selforg/noisegenerator.h> // include noisegenerator (used for adding noise to sensorvalues)
 #include <selforg/one2onewiring.h>  // simple wiring
@@ -50,7 +52,7 @@ bool track=false; // whether to track the robot (set by cmdline parameter)
 
 class ThisSim : public Simulation {
 public:
-  AbstractController* controller;
+  StackInvertMotorNStep* controller;
   OdeRobot* robot;
 
   // starting function (executed once at the beginning of the simulation loop)
@@ -99,10 +101,17 @@ public:
     // create pointer to controller
     // set some parameters
     // push controller in global list of configurables
-    controller = new InvertMotorSpace(10);
-    controller->setParam("epsA",0.05); // model learning rate
-    controller->setParam("epsC",0.2); // controller learning rate
-    controller->setParam("rootE",3);    // model and contoller learn with square rooted error
+    controller = new StackInvertMotorNStep(50,5);
+    InvertMotorNStep* controller0 = new InvertMotorNStep();
+    InvertMotorNStep* controller1 = new InvertMotorNStep();
+    controller->addLayer(controller0);
+    controller->addLayer(controller1);
+    controller0->setParam("epsA",0.05); // model learning rate
+    controller0->setParam("epsC",0.2); // controller learning rate
+    controller0->setParam("rootE",3);    // model and contoller learn with square rooted error
+    controller1->setParam("epsA",0.05); // model learning rate
+    controller1->setParam("epsC",0.2); // controller learning rate
+    controller1->setParam("rootE",3);    // model and contoller learn with square rooted error
     global.configs.push_back ( controller );
 
     // SineController (produces just sine waves)
