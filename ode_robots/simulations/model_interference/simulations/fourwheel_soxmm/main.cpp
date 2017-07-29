@@ -6,6 +6,9 @@
 #include <ode_robots/odeagent.h>
 // Robot's controller
 #include "../../controller/soxmm.h"
+#include <selforg/controller/invertmotornstep.h>
+#include <selforg/controller/stackinvertmotornstep.h>
+
 // Robot's wiring
 #include <selforg/one2onewiring.h>
 // The robot
@@ -40,6 +43,9 @@ class ThisSim : public Simulation
     int bin_x, bin_y, coverage, displacement;
     OdeRobot* robot;
     SoxMM* controller;
+    StackInvertMotorNStep* controller_inv;
+    InvertMotorNStep* controller0;
+    InvertMotorNStep* controller1;
     Logeable* log;
     double error;
     int cover[10][10];
@@ -131,6 +137,15 @@ class ThisSim : public Simulation
         case 1: // Linear
           controller = new SoxMM(soxConf, LINEAR);
           controller->setParam("epsA", epsA); // 0.05
+	  controller_inv = new StackInvertMotorNStep(50,10);
+	  controller0 = new InvertMotorNStep();
+	  controller1 = new InvertMotorNStep();
+          controller_inv->addLayer(controller0);
+          controller_inv->addLayer(controller1);
+	  controller0->setParam("epsA",0.05);
+	  controller1->setParam("epsA",0.05);
+	  controller0->setParam("epsC",0.2);
+	  controller1->setParam("epsC",0.2);
           break;
         case 3: // Linear Regression
           controller = new SoxMM(soxConf, LINEAR_REGRESSION);
@@ -161,7 +176,7 @@ class ThisSim : public Simulation
       // Create Agent
       OdeAgent* agent = new OdeAgent(global);
       // Agent initialisation
-      agent->init(controller, robot, wiring);
+      agent->init(controller_inv, robot, wiring);
       // Adding the agent to the agents list
       global.agents.push_back(agent);
       global.configs.push_back(agent);
@@ -326,7 +341,7 @@ int main (int argc, char **argv)
       terrain = atoi(argv[index]);
 
 
-  which_model = 2; // ESN as default
+  which_model = 1; // ESN as default
   index = Base::contains(argv, argc, "-model");
   if(index) 
     if(argc > index)

@@ -1,0 +1,4 @@
+ens_n	coverage	error	zsize	epsa	epsc	spectral_radius	displacement	updise_down	time_steps	extended_model	model	stuck_percentage
+12	14	0.000813	0.100000	0.005000	0.005000	0.900000	28	0	6748	1	2	0.000000
+12	2	0.000000	0.300000	0.005000	0.005000	0.900000	3	0	1076	1	2	0.000000
+88	0.000000	0.200000	0.005000	0.005000	554	0	360000	1	1	0.000000
