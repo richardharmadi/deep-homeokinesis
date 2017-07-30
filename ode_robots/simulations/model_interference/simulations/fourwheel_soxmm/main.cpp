@@ -183,7 +183,7 @@ class ThisSim : public Simulation
         // the following line will enables a position tracking of the robot, which is written into a file
         // you can customize what is logged with the TrackRobotConf
         TrackRobotConf tc = TrackRobot::getDefaultConf();
-        //tc.scene = "zaxis";
+        tc.scene = "zaxis";
         tc.displayTrace = true;
         agent->setTrackOptions(TrackRobot(tc));
       }

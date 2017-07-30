@@ -1,0 +1,2 @@
+coverage	error	zsize	epsa	epsc	displacement	updise_down	time_steps	extended_model	model	stuck_percentage
+91	0.000000	0.200000	0.005000	0.005000	581	0	360000	1	1	0.000000
