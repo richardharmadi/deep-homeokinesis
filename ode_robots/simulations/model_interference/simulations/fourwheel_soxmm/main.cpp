@@ -37,6 +37,8 @@ bool useExtendedModel;
 double stuckness;
 double sigma_sqr_LWR;
 
+bool track = false; //whether to track the robot (set by cmdline parameter)
+
 class ThisSim : public Simulation
 {
   public:
@@ -177,6 +179,15 @@ class ThisSim : public Simulation
       OdeAgent* agent = new OdeAgent(global);
       // Agent initialisation
       agent->init(controller_inv, robot, wiring);
+      if(track){
+        // the following line will enables a position tracking of the robot, which is written into a file
+        // you can customize what is logged with the TrackRobotConf
+        TrackRobotConf tc = TrackRobot::getDefaultConf();
+        //tc.scene = "zaxis";
+        tc.displayTrace = true;
+        agent->setTrackOptions(TrackRobot(tc));
+      }
+
       // Adding the agent to the agents list
       global.agents.push_back(agent);
       global.configs.push_back(agent);
@@ -358,6 +369,9 @@ int main (int argc, char **argv)
   if(index) 
     useExtendedModel = false;
 
+  index = Base::contains(argv, argc, "-track");
+  if(index)
+    track = true;
   // Simulation begins
   return sim.run(argc, argv) ? 0 : 1;
 }
