@@ -48,6 +48,7 @@ class ThisSim : public Simulation
     StackInvertMotorNStep* controller_inv;
     InvertMotorNStep* controller0;
     InvertMotorNStep* controller1;
+    InvertMotorNStep* controller2;
     Logeable* log;
     double error;
     int cover[10][10];
@@ -142,12 +143,16 @@ class ThisSim : public Simulation
 	  controller_inv = new StackInvertMotorNStep(50,10);
 	  controller0 = new InvertMotorNStep();
 	  controller1 = new InvertMotorNStep();
+	  controller2 = new InvertMotorNStep();
           controller_inv->addLayer(controller0);
           controller_inv->addLayer(controller1);
+          controller_inv->addLayer(controller2);
 	  controller0->setParam("epsA",0.05);
 	  controller1->setParam("epsA",0.05);
 	  controller0->setParam("epsC",0.2);
 	  controller1->setParam("epsC",0.2);
+	  controller2->setParam("epsA",0.05);
+	  controller2->setParam("epsC",0.2);
           break;
         case 3: // Linear Regression
           controller = new SoxMM(soxConf, LINEAR_REGRESSION);
