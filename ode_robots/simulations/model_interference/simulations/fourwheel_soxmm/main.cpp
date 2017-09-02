@@ -36,6 +36,7 @@ string logFileName;
 bool useExtendedModel;
 double stuckness;
 double sigma_sqr_LWR;
+int nlayer;
 
 bool track = false; //whether to track the robot (set by cmdline parameter)
 
@@ -45,7 +46,6 @@ class ThisSim : public Simulation
     int bin_x, bin_y, coverage, displacement;
     OdeRobot* robot;
     SoxMM* controller;
-    int nlayer;  
     StackInvertMotorNStep* controller_inv;
     // InvertMotorNStep* controllers[nlayer];
     // InvertMotorNStep* controller0;
@@ -148,8 +148,8 @@ class ThisSim : public Simulation
     for(int i=0;i<nlayer;i++){
       // controllers[i] = new InvertMotorNStep();
       // controller_inv->addLayer(controllers[i]);
-      controllers[i]->setParam("epsA",0.05);
-      controllers[i]->setParam("epsC",0.2);
+      controller_inv[i]->setParam("epsA",0.05);
+      controller_inv[i]->setParam("epsC",0.2);
     }
 	  // controller0 = new InvertMotorNStep();
 	  // controller1 = new InvertMotorNStep();
