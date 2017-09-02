@@ -45,12 +45,14 @@ class ThisSim : public Simulation
     int bin_x, bin_y, coverage, displacement;
     OdeRobot* robot;
     SoxMM* controller;
+    int nlayer;  
     StackInvertMotorNStep* controller_inv;
-    InvertMotorNStep* controller0;
-    InvertMotorNStep* controller1;
-    InvertMotorNStep* controller2;
-    InvertMotorNStep* controller3;
-    InvertMotorNStep* controller4;
+    InvertMotorNStep* controllers[nlayer];
+    // InvertMotorNStep* controller0;
+    // InvertMotorNStep* controller1;
+    // InvertMotorNStep* controller2;
+    // InvertMotorNStep* controller3;
+    // InvertMotorNStep* controller4;
     Logeable* log;
     double error;
     int cover[10][10];
@@ -143,27 +145,33 @@ class ThisSim : public Simulation
           controller = new SoxMM(soxConf, LINEAR);
           controller->setParam("epsA", epsA); // 0.05
 	  controller_inv = new StackInvertMotorNStep(50,10);
-	  controller0 = new InvertMotorNStep();
-	  controller1 = new InvertMotorNStep();
-	  controller2 = new InvertMotorNStep();
-	  controller3 = new InvertMotorNStep();
-	  controller4 = new InvertMotorNStep();
-          controller_inv->addLayer(controller0);
-          controller_inv->addLayer(controller1);
-          controller_inv->addLayer(controller2);
-          controller_inv->addLayer(controller3);
-          controller_inv->addLayer(controller4);
-	  controller0->setParam("epsA",0.05);
-	  controller1->setParam("epsA",0.05);
-	  controller2->setParam("epsA",0.05);
-	  controller3->setParam("epsA",0.05);
-	  controller4->setParam("epsA",0.05);
+    for(int i=0;i<nlayer;i++){
+      controllers[i] = new InvertMotorNStep();
+      controller_inv->addLayer(controllers[i]);
+      controllers[i]->setParam("epsA",0.05);
+      controllers[i]->setParam("epsC",0.2);
+    }
+	  // controller0 = new InvertMotorNStep();
+	  // controller1 = new InvertMotorNStep();
+	  // controller2 = new InvertMotorNStep();
+	  // controller3 = new InvertMotorNStep();
+	  // controller4 = new InvertMotorNStep();
+    //       controller_inv->addLayer(controller0);
+    //       controller_inv->addLayer(controller1);
+    //       controller_inv->addLayer(controller2);
+    //       controller_inv->addLayer(controller3);
+    //       controller_inv->addLayer(controller4);
+	  // controller0->setParam("epsA",0.05);
+	  // controller1->setParam("epsA",0.05);
+	  // controller2->setParam("epsA",0.05);
+	  // controller3->setParam("epsA",0.05);
+	  // controller4->setParam("epsA",0.05);
 
-	  controller0->setParam("epsC",0.2);
-	  controller1->setParam("epsC",0.2);
-	  controller2->setParam("epsC",0.2);
-	  controller3->setParam("epsC",0.2);
-	  controller4->setParam("epsC",0.2);
+	  // controller0->setParam("epsC",0.2);
+	  // controller1->setParam("epsC",0.2);
+	  // controller2->setParam("epsC",0.2);
+	  // controller3->setParam("epsC",0.2);
+	  // controller4->setParam("epsC",0.2);
           break;
         case 3: // Linear Regression
           controller = new SoxMM(soxConf, LINEAR_REGRESSION);
@@ -388,6 +396,11 @@ int main (int argc, char **argv)
   index = Base::contains(argv, argc, "-track");
   if(index)
     track = true;
+  
+  index = Base::contains(argv, argc, "-layer");
+  if(index)
+    if(argc > index)
+      nlayer = atoi(argv[index]);
   // Simulation begins
   return sim.run(argc, argv) ? 0 : 1;
 }
