@@ -22,7 +22,7 @@
 #include <ode_robots/terrainground.h>
 
 #include <selforg/logeable.h>
-
+#include <vector>
 using namespace lpzrobots;
 int ESN_N;
 bool toLog;
@@ -47,7 +47,7 @@ class ThisSim : public Simulation
     SoxMM* controller;
     int nlayer;  
     StackInvertMotorNStep* controller_inv;
-    InvertMotorNStep* controllers[nlayer];
+    // InvertMotorNStep* controllers[nlayer];
     // InvertMotorNStep* controller0;
     // InvertMotorNStep* controller1;
     // InvertMotorNStep* controller2;
@@ -144,10 +144,10 @@ class ThisSim : public Simulation
         case 1: // Linear
           controller = new SoxMM(soxConf, LINEAR);
           controller->setParam("epsA", epsA); // 0.05
-	  controller_inv = new StackInvertMotorNStep(50,10);
+	  controller_inv = new StackInvertMotorNStep(50,nlayer);
     for(int i=0;i<nlayer;i++){
-      controllers[i] = new InvertMotorNStep();
-      controller_inv->addLayer(controllers[i]);
+      // controllers[i] = new InvertMotorNStep();
+      // controller_inv->addLayer(controllers[i]);
       controllers[i]->setParam("epsA",0.05);
       controllers[i]->setParam("epsC",0.2);
     }
