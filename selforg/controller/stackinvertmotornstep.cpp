@@ -11,7 +11,7 @@ StackInvertMotorNStep::StackInvertMotorNStep(int buffersize, int nlayers)
   // layers only used for memory reservation
   buffer = buffersize;
   //controllers.reserve(nlayers); // memory reserve
-  for (int i = 0; i < nlayers; ++i) {
+  for (int i = 0; i < nlayers; i++) {
     controllers.push_back(new InvertMotorNStep());
     actual_nlayer+=1;
   }   
