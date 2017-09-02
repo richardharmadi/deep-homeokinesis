@@ -145,13 +145,9 @@ class ThisSim : public Simulation
           controller = new SoxMM(soxConf, LINEAR);
           controller->setParam("epsA", epsA); // 0.05
 	  controller_inv = new StackInvertMotorNStep(50,nlayer);
-    for(size_t i=0;i<controller_inv.size();i++){
-      // controllers[i] = new InvertMotorNStep();
-      // controller_inv->addLayer(controllers[i]);
-      controller_inv[i].setParam("epsA",0.05);
-      controller_inv[i].setParam("epsC",0.2);
-    }
-	  // controller0 = new InvertMotorNStep();
+    controller_inv->setParams("epsA",0.05);
+    controller_inv->setParams("epsC",0.2);
+    // controller0 = new InvertMotorNStep();
 	  // controller1 = new InvertMotorNStep();
 	  // controller2 = new InvertMotorNStep();
 	  // controller3 = new InvertMotorNStep();

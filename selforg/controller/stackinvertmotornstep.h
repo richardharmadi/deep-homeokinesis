@@ -53,7 +53,7 @@ public:
   virtual vector<sensor> getInvInputFromLayer(int layernumber);
   virtual vector<motor> getAvgOutputFromLayer(int layernumber);
   virtual unsigned int getNLayer() const { return actual_nlayer; };
-
+  virtual void setParams(string param, double value);
   virtual void updateMotorValue(int layernumber, motor* y_);
   virtual void updateSensorValue(int layernumber, sensor* x_);
 protected:
