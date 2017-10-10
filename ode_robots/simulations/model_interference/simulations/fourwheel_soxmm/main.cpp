@@ -12,10 +12,14 @@
 // Robot's wiring
 #include <selforg/one2onewiring.h>
 // The robot
-#include <ode_robots/fourwheeled.h> 
+#include <ode_robots/fourwheeled.h>
+#include <ode_robots/sphererobot3masses.h>
+#include <ode_robots/axisorientationsensor.h>
+
 // used arena
 #include <ode_robots/playground.h>
 #include <ode_robots/passivebox.h>
+#include <ode_robots/passivesphere.h>
 
 #include <gsl/gsl_histogram.h>
 #include "../../model/esn.h"
@@ -37,6 +41,7 @@ bool useExtendedModel;
 double stuckness;
 double sigma_sqr_LWR;
 int nlayer;
+int robot_instance;
 
 bool track = false; //whether to track the robot (set by cmdline parameter)
 
@@ -124,17 +129,30 @@ class ThisSim : public Simulation
       global.odeConfig.setParam("controlinterval", 1);
       global.odeConfig.setParam("gravity", -9.8);
 
-      /** New robot instance */
-      // Get the default configuration of the robot
-      FourWheeledConf robotConf = FourWheeled::getDefaultConf();
-      robotConf.useBumper = false;
-      robotConf.useButton = false;
-      robotConf.useBigBox = true;
-      robotConf.force     = 10;
       // Instantiating the robot
-      robot = new FourWheeled(odeHandle, osgHandle, robotConf, "Four wheel robot");
-      // Placing the robot in the scene
-      ((OdeRobot*)robot)->place(Pos(.0, .0, .1));
+      switch(robot_instance){
+      case 1: // FourWheeled
+        /** New robot instance */
+        // Get the default configuration of the robot
+        FourWheeledConf robotConf = FourWheeled::getDefaultConf();
+        robotConf.useBumper = false;
+        robotConf.useButton = false;
+        robotConf.useBigBox = true;
+        robotConf.force     = 10;
+
+        robot = new FourWheeled(odeHandle, osgHandle, robotConf, "Four wheel robot");
+        // Placing the robot in the scene
+        ((OdeRobot*)robot)->place(Pos(.0, .0, .1));
+        break;
+      case 2: // Spherical Robot
+        Sphererobot3MassesConf robotConf = Sphererobot3Masses::getDefaultConf();
+        robotConf.addSensor(new AxisOrientationSensor(AxisOrientationSensor::ZProjection));
+        robotConf.diameter=1.0;
+        robotConf.pendularrange=0.35;
+
+        robot = new Sphererobot3Masses(odeHandle,osgHandle.changeColor(Color(1.0,0.0,0)),robotConf, "Spherical",0.2);
+        ((OdeRobot*)robot)->place(Pos(.0,.0,.1));
+      }
       // Instantiating the model and controller
 
       SoxMMConf soxConf = SoxMM::getDefaultConf();
@@ -397,6 +415,11 @@ int main (int argc, char **argv)
   if(index)
     if(argc > index)
       nlayer = atoi(argv[index]);
+
+  index = Base::contains(argv, argc, "-robot");
+  if(index)
+    if(argc > index)
+      robot_instance = atoi(argv[index]);
   // Simulation begins
   return sim.run(argc, argv) ? 0 : 1;
 }
