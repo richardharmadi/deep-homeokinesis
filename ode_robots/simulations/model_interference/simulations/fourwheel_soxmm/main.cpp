@@ -132,6 +132,8 @@ class ThisSim : public Simulation
       // Instantiating the robot
       switch(robot_instance){
       case 1: // FourWheeled
+      {
+        
         /** New robot instance */
         // Get the default configuration of the robot
         FourWheeledConf robotConf = FourWheeled::getDefaultConf();
@@ -144,7 +146,9 @@ class ThisSim : public Simulation
         // Placing the robot in the scene
         ((OdeRobot*)robot)->place(Pos(.0, .0, .1));
         break;
+      }  
       case 2: // Spherical Robot
+        {
         Sphererobot3MassesConf robotConf = Sphererobot3Masses::getDefaultConf();
         robotConf.addSensor(new AxisOrientationSensor(AxisOrientationSensor::ZProjection));
         robotConf.diameter=1.0;
@@ -152,6 +156,7 @@ class ThisSim : public Simulation
 
         robot = new Sphererobot3Masses(odeHandle,osgHandle.changeColor(Color(1.0,0.0,0)),robotConf, "Spherical",0.2);
         ((OdeRobot*)robot)->place(Pos(.0,.0,.1));
+        }
       }
       // Instantiating the model and controller
 
